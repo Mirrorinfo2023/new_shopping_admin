@@ -47,7 +47,7 @@ const res = await fetch("http://localhost:5000/api/vendors");
   };
 
   const handleAddVendor = () => {
-    router.push("/vendors/add");
+    router.push("/vendors-add");
   };
 
   const filteredVendors = vendors.filter((vendor) =>
