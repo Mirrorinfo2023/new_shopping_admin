@@ -1,52 +1,92 @@
+// src/utils/apiService.js
 import axios from "axios";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
-// Create axios instance
+// Create Axios instance
 const apiClient = axios.create({
-  baseURL: API_BASE,
+  baseURL:"https://secure1.mirrorhub.in/api/", //"https://secure.aladin25.live/api/",
   headers: {
     "Content-Type": "application/json",
+    // "Authorization": "Bearer your_token_here", 
   },
+  timeout: 10000, // optional timeout
 });
 
-// Generic request function
-export const request = async (method, path, data = {}, config = {}) => {
-  try {
-    let response;
-
-    switch (method.toUpperCase()) {
-      case "GET":
-        response = await apiClient.get(path, { params: data, ...config });
-        break;
-
-      case "POST":
-        response = await apiClient.post(path, data, config);
-        break;
-
-      case "PUT":
-        response = await apiClient.put(path, data, config);
-        break;
-
-      case "DELETE":
-        response = await apiClient.delete(path, { data, ...config });
-        break;
-
-      default:
-        throw new Error(`Unsupported method: ${method}`);
+// Centralized API Service
+const ApiService = {
+  // Handle response
+  _handleResponse: (response) => {
+    if (response.status >= 200 && response.status < 300) {
+      return {
+        status: true,
+        data: response.data,
+      };
+    } else {
+      return {
+        status: false,
+        message: response.statusText || "Something went wrong",
+      };
     }
+  },
 
-    return response.data;
-  } catch (error) {
-    console.error("Network Error:", error);
-    throw error;
-  }
+  // Handle error
+  _handleError: (error) => {
+    return {
+      status: false,
+      message:
+        error.response?.data?.message || error.message || "Something went wrong",
+    };
+  },
+
+  // GET
+  get: async (endpoint, params = {}) => {
+    try {
+      const response = await apiClient.get(endpoint, { params });
+      return ApiService._handleResponse(response);
+    } catch (error) {
+      return ApiService._handleError(error);
+    }
+  },
+
+  // POST
+  post: async (endpoint, data = {}) => {
+    try {
+      const response = await apiClient.post(endpoint, data);
+      return ApiService._handleResponse(response);
+    } catch (error) {
+      return ApiService._handleError(error);
+    }
+  },
+
+  // PUT
+  put: async (endpoint, data = {}) => {
+    try {
+      const response = await apiClient.put(endpoint, data);
+      return ApiService._handleResponse(response);
+    } catch (error) {
+      return ApiService._handleError(error);
+    }
+  },
+
+  // PATCH
+  patch: async (endpoint, data = {}) => {
+    try {
+      const response = await apiClient.patch(endpoint, data);
+      return ApiService._handleResponse(response);
+    } catch (error) {
+      return ApiService._handleError(error);
+    }
+  },
+
+  // DELETE
+  delete: async (endpoint) => {
+    try {
+      const response = await apiClient.delete(endpoint);
+      return ApiService._handleResponse(response);
+    } catch (error) {
+      return ApiService._handleError(error);
+    }
+  },
 };
 
-// Shortcut functions
-export const get = (path, params, config) => request("GET", path, params, config);
-export const post = (path, data, config) => request("POST", path, data, config);
-export const put = (path, data, config) => request("PUT", path, data, config);
-export const del = (path, data, config) => request("DELETE", path, data, config);
-
-export default apiClient;
+export default ApiService;
+export { apiClient };

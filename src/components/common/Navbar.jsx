@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const router = useRouter(); // <-- use Next.js router
+  const router = useRouter(); 
   const profileRef = useRef(null);
   const notificationsRef = useRef(null);
   const searchRef = useRef(null);
@@ -57,7 +57,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout(() => {
-      router.push("/login"); // <-- use router.push instead of navigate
+      router.push("/login"); 
     });
   };
 
@@ -67,8 +67,6 @@ const Navbar = () => {
         <div className="lg:hidden text-xl font-bold text-blue-600">Mirror</div>
 
         <div className="flex items-center gap-1 sm:gap-2 ml-auto">
-          {/* Search, Dark Mode, Notifications, Profile buttons same as your original */}
-          {/* Only changes needed: replace useNavigate with router.push for navigation */}
           <div ref={profileRef} className="relative">
             <button onClick={toggleProfileMenu} className="flex items-center gap-2 cursor-pointer p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">A</div>

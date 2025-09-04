@@ -63,6 +63,7 @@ const plusCartItems = {
 // Product management section
 const productItems = {
   title: "products",
+  path: "/products",
   icon: <Package size={ICON_SIZE.main} />,
   submenu: [
     {
@@ -72,7 +73,7 @@ const productItems = {
     },
     {
       title: "All Products",
-      path: "products",
+      path: "/products",
       icon: <List size={ICON_SIZE.sub} />,
     },
     {

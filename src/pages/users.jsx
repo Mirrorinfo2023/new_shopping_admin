@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 
 const Users = () => {
-  // Dummy users data
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -85,7 +84,6 @@ const Users = () => {
     currentPage * itemsPerPage
   );
 
-  // Ensure currentPage never exceeds available pages
   useEffect(() => {
     if (currentPage > totalPages) setCurrentPage(1);
   }, [totalPages, currentPage]);

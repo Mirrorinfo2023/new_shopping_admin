@@ -414,7 +414,7 @@ const Promotions = () => {
                     <div>
                       <p className="text-xs text-gray-500">End Date</p>
                       <div className="font-medium flex items-center">
-                        <span>{formatDate(promotion.endDate)}</span>
+                        {/* <span>{formatDate(promotion.endDate)}</span> */}
                         <span className="ml-2 text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full">{getRemainingTime(promotion.endDate)}</span>
                       </div>
                     </div>

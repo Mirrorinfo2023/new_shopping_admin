@@ -226,7 +226,7 @@ const ProductDetails = () => {
                   </div>
                   <div className="border-b border-gray-200 pb-2">
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Expiry Date</h3>
-                    <p className="text-gray-900">{product.expiryDate ? formatDate(product.expiryDate) : 'N/A'}</p>
+                    {/* <p className="text-gray-900">{product.expiryDate ? formatDate(product.expiryDate) : 'N/A'}</p> */}
                   </div>
                   <div className="border-b border-gray-200 pb-2">
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Stock</h3>

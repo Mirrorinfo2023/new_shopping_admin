@@ -320,11 +320,11 @@ const Overview = () => {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Start Date:</span>
-                    <span className="font-medium">{new Date(promo.startDate).toLocaleDateString()}</span>
+                    {/* <span className="font-medium">{new Date(promo.startDate).toLocaleDateString()}</span> */}
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">End Date:</span>
-                    <span className="font-medium">{new Date(promo.endDate).toLocaleDateString()}</span>
+                    {/* <span className="font-medium">{new Date(promo.endDate).toLocaleDateString()}</span> */}
                   </div>
                 </CardContent>
                 <CardFooter>

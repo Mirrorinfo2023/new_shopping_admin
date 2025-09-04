@@ -293,9 +293,9 @@ const UiManager = () => {
                           <span className="text-2xl font-bold bg-white/20 px-3 py-1 rounded-lg">
                             {offer.discount}% OFF
                           </span>
-                          <span className="text-sm bg-white/10 px-3 py-1 rounded-lg">
+                          {/* <span className="text-sm bg-white/10 px-3 py-1 rounded-lg">
                             Until {new Date(offer.validUntil).toLocaleDateString()}
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                     ))}
