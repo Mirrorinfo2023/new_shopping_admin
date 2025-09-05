@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Save, User, Lock, Bell, Globe, Moon, Sun, Shield, Database } from "lucide-react";
-import "../styles/animations.css";
+import "../styles/animations.module.css";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");

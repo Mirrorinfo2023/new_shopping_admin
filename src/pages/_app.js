@@ -1,16 +1,64 @@
+// // src/pages/_app.js
+// import "@/styles/globals.css";
+// import { Provider } from "react-redux";
+// import { store } from "@/redux/store";
+// import Layout from "@/components/common/Layout";
+// import "@/styles/animations.css";
+
+// export default function App({ Component, pageProps }) {
+//   return (
+//     <Provider store={store}>
+//       <Layout>
+//         <Component {...pageProps} />
+//       </Layout>
+//     </Provider>
+//   );
+// }
+
 // src/pages/_app.js
+"use client"; // required if you use hooks like useEffect here
 import "@/styles/globals.css";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import store from "@/redux/store"; // no curly braces now
 import Layout from "@/components/common/Layout";
-import "@/styles/animations.css";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-export default function App({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }) {
+  const noLayout = Component.noLayout || false;
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
+
+  useEffect(() => {
+    // Skip auth check for login/register pages
+    if (noLayout) {
+      setAuthorized(true);
+      return;
+    }
+
+    const token = sessionStorage.getItem("token"); // JWT or your auth method
+    if (!token) {
+      router.replace("/login"); // redirect to login if not authenticated
+    } else {
+      setAuthorized(true);
+    }
+  }, [router.pathname]);
+
+  // Prevent rendering before auth check
+  if (!authorized) return null;
+
   return (
     <Provider store={store}>
-      <Layout>
+      {noLayout ? (
         <Component {...pageProps} />
-      </Layout>
+      ) : (
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      )}
     </Provider>
   );
 }
+
+
+

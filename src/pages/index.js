@@ -1,16 +1,27 @@
 
 // src/pages/index.js
-import Layout from "@/components/common/Layout";
-import DashboardScreen from "./dashboard/new";
+// import Layout from "@/components/common/Layout";
+// import DashboardScreen from "./dashboard/new";
+// import Login from "./Login";
+
+// export default function Home() {
+//   return (
+//     // <Layout>
+//     <Login />
+//     // </Layout>
+//   );
+// }
+
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  return (
-    // <Layout>
-      <DashboardScreen />
-    // </Layout>
-  );
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/login");
+  }, [router]);
+  return null;
 }
-
 
 // import Image from "next/image";
 // import { Geist, Geist_Mono } from "next/font/google";

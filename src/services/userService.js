@@ -1,19 +1,25 @@
 // src/services/userService.js
-import ApiService from "@/utils/network";
-import API_PATHS from "../utils/Apipaths";
 
-// 1. Fetch all users
+import { post ,get,put,del,} from '@/utils/network';
+import API_PATHS from '../utils/Apipaths';
+
 export const fetchUsers = async () => {
-  const res = await ApiService.get(API_PATHS.GET_USERS);
+  const res = await get(API_PATHS.GET_USERS);
   return res?.data || [];
 };
 
-// 2. Update user status
 export const updateUserStatus = async (userId, newStatus) => {
-  return await ApiService.put(API_PATHS.UPDATE_USER_STATUS(userId), { status: newStatus });
+  const res = await put(
+    API_PATHS.UPDATE_USER_STATUS(userId),
+    { status: newStatus }
+  );
+  return res;
 };
 
-// 3. Credit income to a user
 export const creditUserIncome = async (userId, amount) => {
-  return await ApiService.post(API_PATHS.CREDIT_USER_INCOME(userId), { amount });
+  const res = await post(
+    API_PATHS.CREDIT_USER_INCOME(userId),
+    { amount }
+  );
+  return res;
 };

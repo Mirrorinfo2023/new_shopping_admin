@@ -9,16 +9,17 @@ const AllVendors = () => {
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    fetchVendors();
-  }, []);
+  // useEffect(() => {
+  //   fetchVendors();
+  // }, []);
 
   const fetchVendors = async () => {
     try {
       const res = await fetch("api/vendors/getall");
-      if (!res.status) throw new Error("Failed to fetch");
+      console.log("res is: ", res)
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
-      setVendors(data.vendors || []);
+      setVendors(data);
     } catch (err) {
       console.error("Failed to fetch vendors:", err);
     }
@@ -27,11 +28,11 @@ const AllVendors = () => {
   const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this vendor?")) {
       try {
-        const res = await fetch(`api/vendors/${id}`, {
+        const res = await fetch(`https://api.example.com/vendors/${id}`, {
           method: "DELETE",
         });
         if (!res.ok) throw new Error("Delete failed");
-        setVendors((prev) => prev.filter((v) => v._id !== id));
+        setVendors((prev) => prev.filter((v) => v.id !== id));
       } catch (err) {
         console.error("Failed to delete vendor:", err);
       }
@@ -47,11 +48,11 @@ const AllVendors = () => {
   };
 
   const handleAddVendor = () => {
-    router.push("/vendors-add");
+    router.push("/vendors_add");
   };
 
   const filteredVendors = vendors.filter((vendor) =>
-    vendor.vendorName?.toLowerCase().includes(search.toLowerCase())
+    vendor.name?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -63,7 +64,7 @@ const AllVendors = () => {
         <div className="flex gap-2 flex-wrap">
           <input
             type="text"
-            placeholder="Search by vendor name"
+            placeholder="Search by name"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border border-blue-300 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -91,68 +92,53 @@ const AllVendors = () => {
           <thead className="bg-blue-100 text-blue-800 font-semibold">
             <tr>
               <th className="border px-4 py-2">#</th>
-              <th className="border px-4 py-2">Vendor Name</th>
-              <th className="border px-4 py-2">Business Name</th>
+              <th className="border px-4 py-2">Name</th>
               <th className="border px-4 py-2">Email</th>
               <th className="border px-4 py-2">Phone</th>
-              <th className="border px-4 py-2">GST No</th>
-              <th className="border px-4 py-2">PAN No</th>
-              <th className="border px-4 py-2">Aadhar No</th>
-              <th className="border px-4 py-2">Business Type</th>
+              <th className="border px-4 py-2">Company</th>
               <th className="border px-4 py-2">Address</th>
-              <th className="border px-4 py-2">Verified</th>
-              <th className="border px-4 py-2">Active</th>
-              <th className="border px-4 py-2">Created At</th>
-              <th className="border px-4 py-2">Updated At</th>
+              <th className="border px-4 py-2">Products</th>
+              <th className="border px-4 py-2">Live</th>
+              <th className="border px-4 py-2">Inactive</th>
+              <th className="border px-4 py-2">Last Update</th>
               <th className="border px-4 py-2 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredVendors.length === 0 ? (
               <tr>
-                <td colSpan="15" className="text-center py-4 text-gray-500">
+                <td colSpan="11" className="text-center py-4 text-gray-500">
                   No vendors found.
                 </td>
               </tr>
             ) : (
               filteredVendors.map((vendor, index) => (
-                <tr key={vendor._id} className="hover:bg-blue-50">
+                <tr key={vendor.id} className="hover:bg-blue-50">
                   <td className="border px-4 py-2 text-center">{index + 1}</td>
-                  <td className="border px-4 py-2">{vendor.vendorName}</td>
-                  <td className="border px-4 py-2">{vendor.businessName}</td>
+                  <td className="border px-4 py-2">{vendor.name}</td>
                   <td className="border px-4 py-2">{vendor.email}</td>
                   <td className="border px-4 py-2">{vendor.phone}</td>
-                  <td className="border px-4 py-2">{vendor.gstNumber}</td>
-                  <td className="border px-4 py-2">{vendor.panNumber}</td>
-                  <td className="border px-4 py-2">{vendor.aadharNumber}</td>
-                  <td className="border px-4 py-2">{vendor.businessType}</td>
-                  <td className="border px-4 py-2">
-                    {vendor.address?.street}, {vendor.address?.city},{" "}
-                    {vendor.address?.state} - {vendor.address?.pincode},{" "}
-                    {vendor.address?.country}
+                  <td className="border px-4 py-2">{vendor.company}</td>
+                  <td className="border px-4 py-2 text-center">{vendor.address}</td>
+                  <td
+                    className="border px-4 py-2 text-center text-blue-600 cursor-pointer hover:underline"
+                    onClick={() => router.push(`/vendors/${vendor.id}/products`)}
+                  >
+                    {vendor.productCount}
                   </td>
-                  <td className="border px-4 py-2 text-center">
-                    {vendor.isVerified ? "✔️" : "❌"}
-                  </td>
-                  <td className="border px-4 py-2 text-center">
-                    {vendor.isActive ? "✔️" : "❌"}
-                  </td>
-                  <td className="border px-4 py-2 text-center">
-                    {new Date(vendor.createdAt).toLocaleString()}
-                  </td>
-                  <td className="border px-4 py-2 text-center">
-                    {new Date(vendor.updatedAt).toLocaleString()}
-                  </td>
+                  <td className="border px-4 py-2 text-center">{vendor.liveProducts}</td>
+                  <td className="border px-4 py-2 text-center">{vendor.inactiveProducts}</td>
+                  <td className="border px-4 py-2 text-center">{vendor.lastUpdate}</td>
                   <td className="border px-4 py-2 text-center space-x-2">
                     <button
                       className="text-blue-600 hover:underline"
-                      onClick={() => router.push(`/vendors/edit/${vendor._id}`)}
+                      onClick={() => router.push(`/vendors/edit/${vendor.id}`)}
                     >
                       Edit
                     </button>
                     <button
                       className="text-red-600 hover:underline"
-                      onClick={() => handleDelete(vendor._id)}
+                      onClick={() => handleDelete(vendor.id)}
                     >
                       Delete
                     </button>

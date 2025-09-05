@@ -28,6 +28,7 @@
     "express": "^5.1.0",
     "formik": "^2.4.6",
     "framer-motion": "^12.23.12",
+    "jsonwebtoken": "^9.0.2",
     "jspdf": "^3.0.2",
     "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.542.0",

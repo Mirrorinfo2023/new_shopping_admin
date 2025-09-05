@@ -24,7 +24,7 @@ export default function VendorWithdrawTable() {
   const fetchWithdrawals = async () => {
     setLoading(true);
     try {
-const res = await axios.get("/api/withdrawals"); 
+      const res = await axios.get("/api/withdrawals");
       setData(res.data);
     } catch (error) {
       console.error("Failed to fetch withdrawals:", error);
@@ -98,8 +98,8 @@ const res = await axios.get("/api/withdrawals");
                         item.status === "Pending"
                           ? "default"
                           : item.status === "Approved"
-                          ? "success"
-                          : "destructive"
+                            ? "success"
+                            : "destructive"
                       }
                     >
                       {item.status}

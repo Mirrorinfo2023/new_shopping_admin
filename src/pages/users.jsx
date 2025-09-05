@@ -181,11 +181,10 @@ const Users = () => {
                   </td>
                   <td className="py-3 px-4">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        user.status === "Active"
-                          ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-                          : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
-                      }`}
+                      className={`px-2 py-1 rounded-full text-xs ${user.status === "Active"
+                        ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                        : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"
+                        }`}
                     >
                       {user.status}
                     </span>
