@@ -182,7 +182,7 @@ export default function ProductsDashboard() {
             </Button>
           </Link>
            <div>
-      <h2>Product 1</h2>
+      {/* <h2>Product 1</h2> */}
       {/* <ProductStatus productIds={productId} /> */}
     </div>
           
