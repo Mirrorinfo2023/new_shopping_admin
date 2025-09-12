@@ -1,6 +1,7 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import {
   fetchHomeData,
   selectFlashSale,
@@ -13,7 +14,8 @@ import {
 
 const Home = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
+
   const flashSale = useSelector(selectFlashSale);
   const categories = useSelector(selectCategories);
   const healthPromotions = useSelector(selectHealthPromotions);
@@ -21,17 +23,17 @@ const Home = () => {
   const featuredProducts = useSelector(selectFeaturedProducts);
   const status = useSelector(selectPlusCartStatus);
 
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
+  // Fetch data on mount
   useEffect(() => {
     dispatch(fetchHomeData());
   }, [dispatch]);
 
+  // Flash Sale countdown
   useEffect(() => {
+    if (!flashSale.endsIn) return;
+
     const calculateTimeLeft = () => {
       const endTime = new Date(flashSale.endsIn).getTime();
       const now = new Date().getTime();
@@ -43,6 +45,8 @@ const Home = () => {
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60)
         });
+      } else {
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
       }
     };
 
@@ -87,50 +91,56 @@ const Home = () => {
       </div>
 
       {/* Flash Sale */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <h2 className="text-xl font-bold">Flash Sale</h2>
-            <div className="ml-4 flex space-x-2">
-              <div className="bg-red-100 text-red-800 px-2 py-1 rounded">
-                {String(timeLeft.hours).padStart(2, '0')}h
-              </div>
-              <div className="bg-red-100 text-red-800 px-2 py-1 rounded">
-                {String(timeLeft.minutes).padStart(2, '0')}m
-              </div>
-              <div className="bg-red-100 text-red-800 px-2 py-1 rounded">
-                {String(timeLeft.seconds).padStart(2, '0')}s
+      {flashSale.products?.length > 0 && (
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center">
+              <h2 className="text-xl font-bold">Flash Sale</h2>
+              <div className="ml-4 flex space-x-2">
+                <div className="bg-red-100 text-red-800 px-2 py-1 rounded">
+                  {String(timeLeft.hours).padStart(2, '0')}h
+                </div>
+                <div className="bg-red-100 text-red-800 px-2 py-1 rounded">
+                  {String(timeLeft.minutes).padStart(2, '0')}m
+                </div>
+                <div className="bg-red-100 text-red-800 px-2 py-1 rounded">
+                  {String(timeLeft.seconds).padStart(2, '0')}s
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {flashSale.products.map(product => (
-            <div key={product.id} className="bg-white p-4 rounded-lg shadow">
-              <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded mb-2" />
-              <h3 className="font-medium text-sm mb-1">{product.name}</h3>
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-red-600 font-bold">₹{product.salePrice}</span>
-                  <span className="text-gray-400 text-sm line-through ml-2">₹{product.originalPrice}</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {flashSale.products.map((product) => (
+              <div key={product.id} className="bg-white p-4 rounded-lg shadow">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-32 object-cover rounded mb-2"
+                />
+                <h3 className="font-medium text-sm mb-1">{product.name}</h3>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-red-600 font-bold">₹{product.salePrice}</span>
+                    <span className="text-gray-400 text-sm line-through ml-2">₹{product.originalPrice}</span>
+                  </div>
+                  <span className="text-red-600 text-sm">{product.discount}% off</span>
                 </div>
-                <span className="text-red-600 text-sm">{product.discount}% off</span>
+                <div className="text-sm text-gray-500 mt-1">{product.stockLeft} left</div>
               </div>
-              <div className="text-sm text-gray-500 mt-1">{product.stockLeft} left</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Categories */}
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-4">Categories</h2>
         <div className="grid grid-cols-4 gap-4">
-          {categories.map(category => (
+          {categories.map((category) => (
             <div
               key={category.id}
               className="flex flex-col items-center p-4 bg-white rounded-lg shadow cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => navigate(`/category/${category.slug}`)}
+              onClick={() => router.push(`/category/${category.slug}`)}
             >
               <span className="text-2xl mb-2">{category.icon}</span>
               <span className="text-sm text-center">{category.name}</span>
@@ -146,17 +156,17 @@ const Home = () => {
           <button className="text-blue-600 text-sm">View All &gt;</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {healthPromotions.map(promotion => (
-            <div key={promotion.id} className="bg-white p-4 rounded-lg shadow">
+          {healthPromotions.map((promo) => (
+            <div key={promo.id} className="bg-white p-4 rounded-lg shadow">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-bold mb-1">{promotion.title}</h3>
-                  <p className="text-sm text-gray-600">{promotion.description}</p>
+                  <h3 className="font-bold mb-1">{promo.title}</h3>
+                  <p className="text-sm text-gray-600">{promo.description}</p>
                   <div className="mt-2">
-                    <span className="text-green-600 font-medium">{promotion.discount}% OFF</span>
-                    {promotion.tag && (
+                    <span className="text-green-600 font-medium">{promo.discount}% OFF</span>
+                    {promo.tag && (
                       <span className="ml-2 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
-                        {promotion.tag}
+                        {promo.tag}
                       </span>
                     )}
                   </div>
@@ -171,7 +181,7 @@ const Home = () => {
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-4">Health Tips</h2>
         <div className="grid grid-cols-2 gap-4">
-          {healthTips.map(tip => (
+          {healthTips.map((tip) => (
             <div key={tip.id} className="bg-white p-4 rounded-lg shadow">
               <div className="flex items-center">
                 <span className="text-2xl mr-3">{tip.icon}</span>
@@ -192,9 +202,13 @@ const Home = () => {
           <button className="text-blue-600 text-sm">View All &gt;</button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {featuredProducts.map(product => (
+          {featuredProducts.map((product) => (
             <div key={product.id} className="bg-white p-4 rounded-lg shadow">
-              <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded mb-2" />
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-32 object-cover rounded mb-2"
+              />
               <h3 className="font-medium text-sm mb-1">{product.name}</h3>
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center">
@@ -224,4 +238,4 @@ const Home = () => {
   );
 };
 
-export default Home; 
+export default Home;

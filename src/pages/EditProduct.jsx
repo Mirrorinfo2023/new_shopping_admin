@@ -1,44 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+"use client";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const EditProduct = ({ products, setProducts }) => {
-  const { productId } = useParams();
-  const navigate = useNavigate();
-  const product = products.find(p => p.id === parseInt(productId));
+  const router = useRouter();
+  const { productId } = router.query;
+
+  // Convert productId safely
+  const id = Number(productId);
+
+  // Find the product
+  const product = products?.find((p) => p.id === id);
 
   const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    price: '',
-    stock: '',
-    image: '',
+    name: "",
+    category: "",
+    price: "",
+    stock: "",
+    image: "",
   });
 
+  // Load product details into form
   useEffect(() => {
     if (product) {
-      setFormData(product);
+      setFormData({
+        name: product.name || "",
+        category: product.category || "",
+        price: product.price || "",
+        stock: product.stock || "",
+        image: product.image || "",
+      });
     }
   }, [product]);
 
   const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "price" || name === "stock" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedProducts = products.map(p => 
-      p.id === parseInt(productId) ? { ...formData, id: p.id } : p
+
+    // Update the product list
+    const updatedProducts = products.map((p) =>
+      p.id === id ? { ...formData, id } : p
     );
+
     setProducts(updatedProducts);
-    navigate('/products'); // Redirect after saving
+
+    // Redirect to products page
+    router.push("/products");
   };
 
-  if (!product) return <p className="text-red-500">Product not found</p>;
+  if (!product) {
+    return (
+      <div className="max-w-2xl mx-auto mt-10 p-6 bg-red-100 text-red-700 rounded shadow">
+        Product not found.
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow rounded">
       <h2 className="text-2xl font-semibold mb-6">Edit Product</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Name */}
         <div>
           <label className="block text-sm font-medium">Name</label>
           <input
@@ -50,6 +79,8 @@ const EditProduct = ({ products, setProducts }) => {
             required
           />
         </div>
+
+        {/* Category */}
         <div>
           <label className="block text-sm font-medium">Category</label>
           <input
@@ -61,6 +92,8 @@ const EditProduct = ({ products, setProducts }) => {
             required
           />
         </div>
+
+        {/* Price */}
         <div>
           <label className="block text-sm font-medium">Price</label>
           <input
@@ -72,6 +105,8 @@ const EditProduct = ({ products, setProducts }) => {
             required
           />
         </div>
+
+        {/* Stock */}
         <div>
           <label className="block text-sm font-medium">Stock</label>
           <input
@@ -83,6 +118,8 @@ const EditProduct = ({ products, setProducts }) => {
             required
           />
         </div>
+
+        {/* Image */}
         <div>
           <label className="block text-sm font-medium">Image URL</label>
           <input
@@ -93,7 +130,12 @@ const EditProduct = ({ products, setProducts }) => {
             className="w-full border px-3 py-2 rounded"
           />
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
           Save Changes
         </button>
       </form>

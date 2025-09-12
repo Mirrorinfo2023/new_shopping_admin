@@ -1,46 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  Users as UsersIcon, 
-  UserPlus, 
-  Search, 
+"use client";
+import React, { useState } from "react";
+import Link from "next/link"; // ✅ Use Next.js Link
+import {
+  Users as UsersIcon,
+  UserPlus,
+  Search,
   Filter,
   MoreVertical,
   Edit,
   Trash2,
-  BarChart
-} from 'lucide-react';
+  BarChart,
+} from "lucide-react";
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([
+  const [users] = useState([
     {
       id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'Customer',
-      status: 'Active',
-      lastLogin: '2024-02-20',
-      orders: 5
+      name: "John Doe",
+      email: "john@example.com",
+      role: "Customer",
+      status: "Active",
+      lastLogin: "2024-02-20",
+      orders: 5,
     },
     {
       id: 2,
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'Customer',
-      status: 'Active',
-      lastLogin: '2024-02-19',
-      orders: 3
+      name: "Jane Smith",
+      email: "jane@example.com",
+      role: "Customer",
+      status: "Active",
+      lastLogin: "2024-02-19",
+      orders: 3,
     },
     // Add more mock users as needed
   ]);
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState("all");
 
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = filterRole === 'all' || user.role.toLowerCase() === filterRole.toLowerCase();
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole =
+      filterRole === "all" ||
+      user.role.toLowerCase() === filterRole.toLowerCase();
     return matchesSearch && matchesRole;
   });
 
@@ -53,7 +57,7 @@ const UserManagement = () => {
           <p className="text-gray-600">Manage and monitor user accounts</p>
         </div>
         <Link
-          to="/users/analytics"
+          href="/users/analytics"
           className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
         >
           <BarChart size={20} />
@@ -65,7 +69,10 @@ const UserManagement = () => {
       <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-wrap gap-4 items-center">
         <div className="flex-1 min-w-[200px]">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
             <input
               type="text"
               placeholder="Search users..."
@@ -93,12 +100,24 @@ const UserManagement = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Login</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                User
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Last Login
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Orders
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -108,11 +127,15 @@ const UserManagement = () => {
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
                       <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span className="text-blue-600 font-medium">{user.name[0]}</span>
+                        <span className="text-blue-600 font-medium">
+                          {user.name[0]}
+                        </span>
                       </div>
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.name}
+                      </div>
                       <div className="text-sm text-gray-500">{user.email}</div>
                     </div>
                   </div>
@@ -155,4 +178,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement; 
+export default UserManagement;

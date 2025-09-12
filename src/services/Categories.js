@@ -1,12 +1,22 @@
 // src/services/categoryService.js
-import { post ,get,put,del,} from '@/utils/network';
-import API_PATHS from '../utils/Apipaths';
+import ApiService from "@/utils/network";
+import API_PATHS from "../utils/Apipaths";
 
-export const getAllCategories = () =>
-  get(API_PATHS.GET_ALL_CATEGORIES);
+// Get all categories
+export const getAllCategories = async () => {
+  const res = await ApiService.get(API_PATHS.GET_ALL_CATEGORIES);
+  return res;
+};
 
-export const createCategory = (payload) =>
-  post(API_PATHS.CREATE_CATEGORY, payload);
+// Create a new category
+export const createCategory = async (payload) => {
+  const res = await ApiService.post(API_PATHS.CREATE_CATEGORY, payload);
+  return res;
+};
 
-export const deleteCategoryById = (id) =>
-  del(API_PATHS.DELETE_CATEGORY_BY_ID(id));
+// Delete a category by ID
+export const deleteCategoryById = async (id) => {
+  const endpoint = API_PATHS.DELETE_CATEGORY_BY_ID(id);
+  const res = await ApiService.delete(endpoint);
+  return res;
+};

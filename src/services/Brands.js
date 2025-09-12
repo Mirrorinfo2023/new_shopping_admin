@@ -1,13 +1,22 @@
 // src/services/brandService.js
+import API_PATHS from "../utils/Apipaths";
+import ApiService from "@/utils/network";
 
-import API_PATHS from '../utils/Apipaths';
-import { post ,get,put,del,} from '@/utils/network';
+// Get all brands
+export const getAllBrands = async () => {
+  const res = await ApiService.get(API_PATHS.GET_ALL_BRANDS);
+  return res;
+};
 
-export const getAllBrands = () =>
-  get(API_PATHS.GET_ALL_BRANDS);
+// Create a new brand
+export const createBrand = async (payload) => {
+  const res = await ApiService.post(API_PATHS.CREATE_BRAND, payload);
+  return res;
+};
 
-export const createBrand = (payload) =>
-  post(API_PATHS.CREATE_BRAND, payload);
-
-export const deleteBrandById = (id) =>
-  del(API_PATHS.DELETE_BRAND_BY_ID(id));
+// Delete a brand by ID
+export const deleteBrandById = async (id) => {
+  const endpoint = API_PATHS.DELETE_BRAND_BY_ID(id);
+  const res = await ApiService.delete(endpoint);
+  return res;
+};

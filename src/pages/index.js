@@ -1,10 +1,14 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
+// src/pages/index.js
+import Layout from "@/components/common/Layout";
+import DashboardScreen from "./dashboard/new";
+
 export default function Home() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/login");
-  }, [router]);
-  return null;
+  return (
+    // <Layout>
+      <DashboardScreen />
+    // </Layout>
+  );
 }

@@ -1,88 +1,98 @@
-// src/api/apicall/auth.js
-import { post } from "../client";
+import { apiRequest } from "../client";
 import { ENDPOINTS } from "../config";
 
-const TOKEN_KEY = "token";
+export const getAuthToken = () => {
+  return localStorage.getItem("token");
+};
 
-// ----------------------
-// Storage helpers
-// ----------------------
-export const getAuthToken = () => sessionStorage.getItem(TOKEN_KEY);
 export const setAuthToken = (token) => {
-  if (token) sessionStorage.setItem(TOKEN_KEY, token);
-};
-export const clearAuthData = () => {
-  sessionStorage.removeItem(TOKEN_KEY);
+  if (token) {
+    localStorage.setItem("token", token);
+  }
 };
 
-// ----------------------
-// Login
-// ----------------------
+export const clearAuthData = () => {
+  localStorage.removeItem("token");
+};
+
 export const login = async (credentials) => {
   try {
-    // call API
-    const response = await post(ENDPOINTS.AUTH.LOGIN, credentials);
+    const response = await apiRequest.post(ENDPOINTS.AUTH.LOGIN, credentials);
+    const verifyResponse = response.data;
 
-    // API should return something like { responseCode: 1, response: { token: "..." } }
-    if (response.responseCode === 1) {
-      const token = response.response.token;
+    if (verifyResponse.responseCode === 1) {
+      const token = verifyResponse.response.token;
       setAuthToken(token);
 
       return {
         success: true,
         token,
-        user: response.response.user || null,
+        data: {
+          response: {
+            user: {
+              email: credentials.email,
+              role: "admin",
+            },
+          },
+        },
       };
     } else {
       return {
         success: false,
-        message: response.message || "Invalid credentials",
+        message: "Token verification failed",
       };
     }
   } catch (error) {
     console.error("Login error:", error);
     return {
       success: false,
-      message: error.response?.data?.message || "Login failed",
+      message: error.response?.data?.message || "Login failed. Please check your credentials.",
     };
   }
 };
 
-// ----------------------
-// Logout
-// ----------------------
 export const logout = async () => {
   try {
     const token = getAuthToken();
     if (token) {
-      await post(ENDPOINTS.AUTH.LOGOUT, { token });
+      await apiRequest.post(ENDPOINTS.AUTH.LOGOUT, { token });
     }
   } catch (error) {
     console.error("Logout error:", error);
   } finally {
-    clearAuthData(); // always clear token
+    clearAuthData();
   }
 };
 
-// ----------------------
-// Verify token
-// ----------------------
 export const checkToken = async () => {
   try {
     const token = getAuthToken();
-    if (!token) return { valid: false };
+    if (!token) {
+      return { valid: false };
+    }
 
-    const response = await post(ENDPOINTS.AUTH.VERIFY, { token });
+    const response = await apiRequest.post(ENDPOINTS.AUTH.VERIFY, { token });
+    const verifyResponse = response.data;
 
-    if (response.responseCode === 1) {
-      return { valid: response.response.isValid };
+    if (verifyResponse.responseCode === 1) {
+      return {
+        valid: verifyResponse.response.isValid,
+      };
     } else {
       clearAuthData();
-      return { valid: false };
+      return {
+        valid: false,
+      };
     }
   } catch (error) {
     console.error("Token verification error:", error);
-    clearAuthData();
-    return { valid: false };
+    return {
+      success: false,
+      message: "Invalid token",
+    };
   }
+};
+
+export const updateUserData = (userData) => {
+  sessionStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
 };

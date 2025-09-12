@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { addInHouseProduct, getInHouseProducts } from "@/services/productApi";
+import { createProductService, fetchProductsService } from "@/services/products";
+
+const inputClass = "w-full px-4 py-2 border rounded-md";
 
 const defaultFormState = {
   name: "",
@@ -30,8 +32,8 @@ const InHouseProduct = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const data = await getInHouseProducts();
-      setProducts(data);
+      const data = await fetchProductsService();
+      setProducts(data || []);
     } catch (error) {
       console.error("Failed to fetch products:", error);
     } finally {
@@ -64,19 +66,19 @@ const InHouseProduct = () => {
 
     const payload = {
       ...formData,
-      price: parseFloat(formData.price),
-      discount: parseFloat(formData.discount || 0),
-      quantity: parseInt(formData.quantity, 10),
+      price: parseFloat(formData.price) || 0,
+      discount: parseFloat(formData.discount) || 0,
+      quantity: parseInt(formData.quantity, 10) || 0,
     };
 
     try {
-      const response = await addInHouseProduct(payload);
+      const response = await createProductService(payload);
       if (response?.status) {
-        alert("Product added successfully");
+        alert(" Product added successfully");
         setFormData(defaultFormState);
         fetchProducts();
       } else {
-        alert(response?.message || "Failed to add product");
+        alert(response?.message || "❌ Failed to add product");
       }
     } catch (error) {
       console.error("Add product error:", error);
@@ -88,7 +90,7 @@ const InHouseProduct = () => {
     <div className="p-6 bg-gray-100 min-h-screen">
       <h2 className="text-2xl font-bold mb-6">In-House Product</h2>
 
-      {/* Form */}
+      {/* Form
       <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mb-10">
         <h3 className="text-lg font-semibold mb-4">Add New Product</h3>
         <div className="grid grid-cols-2 gap-4">
@@ -125,14 +127,16 @@ const InHouseProduct = () => {
         >
           ➕ Add Product
         </button>
-      </div>
+      </div> */}
 
       {/* Product List */}
       <div className="overflow-x-auto bg-white p-4 rounded-lg shadow-md">
         <h3 className="text-lg font-semibold mb-4">In-House Product List</h3>
 
         {loading ? (
-          <p>Loading...</p>
+          <div className="flex items-center justify-center h-screen">
+            <p className="text-lg font-medium text-gray-600">Loading...</p>
+          </div>
         ) : (
           <table className="w-full table-auto border-collapse text-sm">
             <thead>
@@ -167,8 +171,11 @@ const InHouseProduct = () => {
   );
 };
 
-const Input = ({ type = "text", ...props }) => <input type={type} {...props} className={inputClass} />;
+const Input = ({ type = "text", ...props }) => (
+  <input type={type} {...props} className={inputClass} />
+);
 
+// Reusable Select
 const Select = ({ name, value, onChange, options }) => (
   <select name={name} value={value} onChange={onChange} className={inputClass}>
     {options.map((opt) => (
@@ -178,7 +185,5 @@ const Select = ({ name, value, onChange, options }) => (
     ))}
   </select>
 );
-
-const inputClass = "w-full px-4 py-2 border rounded-md";
 
 export default InHouseProduct;
