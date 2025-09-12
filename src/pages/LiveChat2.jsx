@@ -311,3 +311,13 @@
 // };
 
 // export default ChatApp;
+import React from "react";
+
+export default function LiveChat2() {
+  return (
+    <div>
+      <h1>Live Chat 2 Page</h1>
+      <p>This is the second Live Chat page.</p>
+    </div>
+  );
+}

@@ -1,14 +1,12 @@
 // src/pages/DashboardScreen.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
-
 import {
   BarChart,
   Bar,
@@ -80,14 +78,6 @@ const COLORS = ["#3b82f6", "#60a5fa", "#93c5fd", "#1e3a8a", "#2563eb"];
 
 const DashboardScreen = () => {
   const [localStores, setLocalStores] = useState(initialTopStores);
-
-  const router = useRouter();
-  useEffect(() => {
-    const token = sessionStorage.getItem("token"); // or your auth method
-    if (!token) {
-      router.replace("/login"); // redirect if not logged in
-    }
-  }, []);
 
   const handleStatusChange = (index, newStatus) => {
     const updated = [...localStores];

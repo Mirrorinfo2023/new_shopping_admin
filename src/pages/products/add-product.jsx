@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // ✅ Next.js router
+import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Plus, Trash } from 'lucide-react';
-import { post } from '@/utils/network';
+import { createProductService } from '@/services/products';
 
 const AddProduct = () => {
   const router = useRouter();
@@ -24,14 +24,15 @@ const AddProduct = () => {
     vendorId: '',
     categoryId: '',
     brand: '',
-    price: '',
-    discount: '',
-    quantity: '',
+    price: 0,
+    discount: 0,
+    quantity: 0,
     stockStatus: 'in_stock',
     tags: [''],
     variants: [{ variantName: '', value: '', additionalPrice: 0 }],
     attributes: [{ key: '', value: '' }],
     isFeatured: false,
+    isFromVendor: false,
   });
 
   const handleChange = (field, value) => {
@@ -64,18 +65,12 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await post({
-        path: '/api/products/createproduct',
-        data: formData,
-        onStart: () => console.log('Creating product...'),
-        onFinish: () => console.log('Done'),
-      });
-
+      const res = await createProductService(formData);
       alert('Product created successfully!');
       router.push('/products');
     } catch (err) {
       console.error('Error creating product:', err);
-      alert('Failed to create product.');
+      alert(err.response?.data?.message || 'Failed to create product.');
     }
   };
 
@@ -86,23 +81,134 @@ const AddProduct = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input placeholder="SKU" value={formData.sku} onChange={(e) => handleChange('sku', e.target.value)} />
-            <Input placeholder="Product Name" value={formData.productName} onChange={(e) => handleChange('productName', e.target.value)} />
-            <Textarea placeholder="Description" value={formData.description} onChange={(e) => handleChange('description', e.target.value)} />
-            <Input placeholder="Short Description" value={formData.shortDescription} onChange={(e) => handleChange('shortDescription', e.target.value)} />
-            <Input placeholder="Thumbnail" value={formData.thumbnail} onChange={(e) => handleChange('thumbnail', e.target.value)} />
-            <Input placeholder="Vendor ID" value={formData.vendorId} onChange={(e) => handleChange('vendorId', e.target.value)} />
-            <Input placeholder="Category ID" value={formData.categoryId} onChange={(e) => handleChange('categoryId', e.target.value)} />
-            <Input placeholder="Brand" value={formData.brand} onChange={(e) => handleChange('brand', e.target.value)} />
-            <Input type="number" placeholder="Price" value={formData.price} onChange={(e) => handleChange('price', e.target.value)} />
-            <Input type="number" placeholder="Discount (%)" value={formData.discount} onChange={(e) => handleChange('discount', e.target.value)} />
-            <Input type="number" placeholder="Quantity" value={formData.quantity} onChange={(e) => handleChange('quantity', e.target.value)} />
-            <select value={formData.stockStatus} onChange={(e) => handleChange('stockStatus', e.target.value)} className="input border p-2 rounded">
-              <option value="in_stock">In Stock</option>
-              <option value="out_of_stock">Out of Stock</option>
-            </select>
+            {/* SKU */}
+            <div className="flex flex-col">
+              <Label>SKU</Label>
+              <Input
+                placeholder="SKU"
+                value={formData.sku}
+                onChange={(e) => handleChange('sku', e.target.value)}
+              />
+            </div>
+
+            {/* Product Name */}
+            <div className="flex flex-col">
+              <Label>Product Name</Label>
+              <Input
+                placeholder="Product Name"
+                value={formData.productName}
+                onChange={(e) => handleChange('productName', e.target.value)}
+              />
+            </div>
+
+            {/* Description */}
+            <div className="flex flex-col">
+              <Label>Description</Label>
+              <Textarea
+                placeholder="Description"
+                value={formData.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+              />
+            </div>
+
+            {/* Short Description */}
+            <div className="flex flex-col">
+              <Label>Short Description</Label>
+              <Input
+                placeholder="Short Description"
+                value={formData.shortDescription}
+                onChange={(e) => handleChange('shortDescription', e.target.value)}
+              />
+            </div>
+
+            {/* Thumbnail */}
+            <div className="flex flex-col">
+              <Label>Thumbnail URL</Label>
+              <Input
+                placeholder="Thumbnail"
+                value={formData.thumbnail}
+                onChange={(e) => handleChange('thumbnail', e.target.value)}
+              />
+            </div>
+
+            {/* Vendor ID */}
+            <div className="flex flex-col">
+              <Label>Vendor ID</Label>
+              <Input
+                placeholder="Vendor ID"
+                value={formData.vendorId}
+                onChange={(e) => handleChange('vendorId', e.target.value)}
+              />
+            </div>
+
+            {/* Category ID */}
+            <div className="flex flex-col">
+              <Label>Category ID</Label>
+              <Input
+                placeholder="Category ID"
+                value={formData.categoryId}
+                onChange={(e) => handleChange('categoryId', e.target.value)}
+              />
+            </div>
+
+            {/* Brand */}
+            <div className="flex flex-col">
+              <Label>Brand</Label>
+              <Input
+                placeholder="Brand"
+                value={formData.brand}
+                onChange={(e) => handleChange('brand', e.target.value)}
+              />
+            </div>
+
+            {/* Price */}
+            <div className="flex flex-col">
+              <Label>Price</Label>
+              <Input
+                type="number"
+                placeholder="Price"
+                value={formData.price}
+                onChange={(e) => handleChange('price', Number(e.target.value))}
+              />
+            </div>
+
+            {/* Discount */}
+            <div className="flex flex-col">
+              <Label>Discount (%)</Label>
+              <Input
+                type="number"
+                placeholder="Discount (%)"
+                value={formData.discount}
+                onChange={(e) => handleChange('discount', Number(e.target.value))}
+              />
+            </div>
+
+            {/* Quantity */}
+            <div className="flex flex-col">
+              <Label>Quantity</Label>
+              <Input
+                type="number"
+                placeholder="Quantity"
+                value={formData.quantity}
+                onChange={(e) => handleChange('quantity', Number(e.target.value))}
+              />
+            </div>
+
+            {/* Stock Status */}
+            <div className="flex flex-col">
+              <Label>Stock Status</Label>
+              <select
+                value={formData.stockStatus}
+                onChange={(e) => handleChange('stockStatus', e.target.value)}
+                className="border p-2 rounded"
+              >
+                <option value="in_stock">In Stock</option>
+                <option value="out_of_stock">Out of Stock</option>
+              </select>
+            </div>
           </CardContent>
         </Card>
+
 
         {/* Tags */}
         <Card>

@@ -48,3 +48,43 @@ export const createProductService = async (productData) => {
     throw err;
   }
 };
+
+
+export const updateProductService = async (productId, updatedData) => {
+  try {
+    const res = await axios.post(`/api/products/${productId}`, updatedData);
+    return res.data;
+  } catch (err) {
+    console.error('Error updating product:', err.response?.data || err.message);
+    throw err;
+  }
+};
+
+// Filter products by category or status
+export const filterProductsService = async (filters) => {
+  try {
+    const query = new URLSearchParams(filters).toString();
+    const res = await fetch(`/api/products/filter?${query}`);
+    if (!res.ok) throw new Error('Failed to filter products');
+    const data = await res.json();
+    return data.products || [];
+  } catch (err) {
+    console.error('Error filtering products:', err);
+    throw err;
+  }
+};
+
+export const updateProductStatusService = async (productIds, status) => {
+  try {
+    const payload = {
+      productIds: Array.isArray(productIds) ? productIds : [productIds],
+      status,
+    };
+
+    const res = await ApiService.post("products/update-status", payload);
+    return res; // will return { status: true, data: ... } from ApiService
+  } catch (error) {
+    console.error("Update status error:", error);
+    return { status: false, message: error.message };
+  }
+};

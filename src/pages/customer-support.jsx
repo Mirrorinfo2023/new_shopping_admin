@@ -1,7 +1,7 @@
 import React from "react";
 import { MessageSquare, Users, RefreshCw, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import "../styles/animations.css";
+// import "@/styles/animations.css";
 
 const CustomerSupport = () => {
   return (
@@ -13,10 +13,10 @@ const CustomerSupport = () => {
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Customer Support</h1>
             <p className="text-gray-600 dark:text-gray-400">Manage customer inquiries and support tickets</p>
           </div>
-          <Link to="/live-chat" className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          {/* <Link to="/live-chat" className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
             <MessageCircle className="h-4 w-4" />
             Live Chat
-          </Link>
+          </Link> */}
         </div>
 
         {/* Support Stats */}
@@ -45,12 +45,12 @@ const CustomerSupport = () => {
                 Respond to queries instantly and improve customer satisfaction.
               </p>
             </div>
-            <Link 
+            {/* <Link 
               to="/live-chat" 
               className="px-6 py-3 bg-white text-blue-700 font-medium rounded-lg hover:bg-blue-50 transition-colors"
             >
               Try Live Chat
-            </Link>
+            </Link> */}
           </div>
         </div>
         
@@ -101,9 +101,9 @@ const CustomerSupport = () => {
                     2 hours ago
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-right">
-                    <Link to="/live-chat" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
+                    {/* <Link to="/live-chat" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
                       Chat Now
-                    </Link>
+                    </Link> */}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 dark:hover:bg-gray-800">
@@ -125,9 +125,9 @@ const CustomerSupport = () => {
                     3 hours ago
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-right">
-                    <Link to="/live-chat" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
+                    {/* <Link to="/live-chat" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
                       Chat Now
-                    </Link>
+                    </Link> */}
                   </td>
                 </tr>
                 <tr className="hover:bg-gray-50 dark:hover:bg-gray-800">
@@ -149,9 +149,9 @@ const CustomerSupport = () => {
                     Yesterday
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-right">
-                    <Link to="/live-chat" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
+                    {/* <Link to="/live-chat" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm">
                       Chat Now
-                    </Link>
+                    </Link> */}
                   </td>
                 </tr>
               </tbody>
@@ -162,13 +162,13 @@ const CustomerSupport = () => {
             <button className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
               View All Tickets
             </button>
-            <Link 
+            {/* <Link 
               to="/live-chat" 
               className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
               <MessageCircle className="h-4 w-4" />
               Go to Live Chat
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
@@ -195,13 +195,13 @@ const CustomerSupport = () => {
         </div>
         <div className="mt-8 text-center">
           <p className="text-gray-600 dark:text-gray-400 mb-4">Live Chat is already available! Try it now to communicate with your customers in real-time.</p>
-          <Link 
+          {/* <Link 
             to="/live-chat" 
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-colors"
           >
             <MessageCircle className="h-5 w-5" />
             Access Live Chat
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

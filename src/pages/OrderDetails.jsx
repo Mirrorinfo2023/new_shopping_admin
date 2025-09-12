@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getOrders } from '@/services/orders_services';
+import { getAllOrders, getOrderById } from "@/services/orders_service";
 import { Button } from '@/components/ui/button';
 
 const OrderDetails = () => {
@@ -15,7 +15,7 @@ const OrderDetails = () => {
   }, []);
 
   const fetchOrder = async () => {
-    const orders = await getOrders();
+    const orders = await getAllOrders();
     if (orders.length > 0) {
       const latestOrder = orders[0];
       setOrder(latestOrder);

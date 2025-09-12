@@ -314,3 +314,13 @@
 // };
 
 // export default LiveChat; 
+import React from "react";
+
+export default function LiveChat() {
+  return (
+    <div>
+      <h1>Live Chat Page</h1>
+      <p>This is the Live Chat page.</p>
+    </div>
+  );
+}

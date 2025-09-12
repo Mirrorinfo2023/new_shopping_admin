@@ -63,6 +63,7 @@ const plusCartItems = {
 // Product management section
 const productItems = {
   title: "products",
+  // path: "/products",
   icon: <Package size={ICON_SIZE.main} />,
   submenu: [
     {
@@ -72,7 +73,7 @@ const productItems = {
     },
     {
       title: "All Products",
-      path: "products",
+      path: "/products",
       icon: <List size={ICON_SIZE.sub} />,
     },
     {
@@ -85,11 +86,11 @@ const productItems = {
       path: "/category",
       icon: <PlusCircle size={ICON_SIZE.sub} />,
       submenu: [
-        {
-          title: "Categories List",
-          path: "/category-list",
-          icon: <List size={ICON_SIZE.sub} />,
-        },
+        // {
+        //   title: "Categories List",
+        //   path: "/category-list",
+        //   icon: <List size={ICON_SIZE.sub} />,
+        // },
         // {
         //   title: "Sub Categories List",
         //   path: "/category/sub-categories",
@@ -104,7 +105,7 @@ const productItems = {
     },
     {
       title: "Cancel Products",
-      path: "/product/cancel",
+      path: "/products/cancel_product",
       icon: <List size={ICON_SIZE.sub} />,
     },
   ],
@@ -256,11 +257,11 @@ const supportItems = {
       path: "/customer-support",
       icon: <HelpCircle size={ICON_SIZE.sub} />,
     },
-    {
-      title: "Live Chat",
-      path: "/live-chat",
-      icon: <MessageCircle size={ICON_SIZE.sub} />,
-    },
+    // {
+    //   title: "Live Chat",
+    //   path: "/live-chat",
+    //   icon: <MessageCircle size={ICON_SIZE.sub} />,
+    // },
   ],
 };
 

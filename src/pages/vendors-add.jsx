@@ -20,7 +20,7 @@ const VendorAdd = () => {
     gstNumber: "",
     panNumber: "",
     aadharNumber: "",
-    businessType: "",
+    businessType: "individual",
     address: {
       street: "",
       city: "",
@@ -44,7 +44,6 @@ const VendorAdd = () => {
     businessLicense: "license.jpg",
   });
 
-  // Handle text inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -63,39 +62,41 @@ const VendorAdd = () => {
     e.preventDefault();
 
     try {
-      const form = new FormData();
+      const payload = {
+        ...formData,
+        kycDocuments: kycFiles,
+      };
 
-      // Append all fields including nested objects
-      Object.entries(formData).forEach(([key, value]) => {
-        if (typeof value === "object") {
-          form.append(key, JSON.stringify(value)); // nested objects as string
-        } else {
-          form.append(key, value);
+      console.log("Submitting vendor data:", payload);
+
+      const response = await axios.post(
+        "/api/vendors/create",
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
         }
-      });
+      );
 
-      // Append KYC files as a JSON string
-      form.append("kycDocuments", JSON.stringify(kycFiles));
-
-      console.log("Submitting vendor data:",+ { ...formData, kycDocuments: kycFiles });
-
-      const response = await axios.post("/api/vendors/create", form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      alert("Vendor created successfully!");
-      router.push("/vendors");
+      if (response.data.success) {
+        alert("Vendor created successfully!");
+        router.push("/vendor");
+      } else {
+        alert("Failed to create vendor. Please check details.");
+      }
     } catch (err) {
-      console.error("Error creating vendor:", err);
-      alert("Failed to create vendor.");
+      console.error("Error creating vendor:", err.response?.data || err);
+      alert("Failed to create vendor. Check console for details.");
     }
   };
+  
 
   return (
     <div className="p-6 md:p-10 bg-gradient-to-tr from-gray-100 to-white min-h-screen">
       <Card className="max-w-5xl mx-auto shadow-2xl">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-gray-800">Add Vendor</CardTitle>
+          <CardTitle className="text-3xl font-bold text-gray-800">
+            Add Vendor
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-6">
@@ -155,7 +156,9 @@ const VendorAdd = () => {
             </div>
 
             {/* KYC Documents */}
-            <h2 className="text-xl font-semibold text-gray-700">KYC Documents (as Strings)</h2>
+            <h2 className="text-xl font-semibold text-gray-700">
+              KYC Documents
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(kycFiles).map(([key, value]) => (
                 <div key={key}>
@@ -165,7 +168,10 @@ const VendorAdd = () => {
                     name={key}
                     value={value}
                     onChange={(e) =>
-                      setKycFiles((prev) => ({ ...prev, [key]: e.target.value }))
+                      setKycFiles((prev) => ({
+                        ...prev,
+                        [key]: e.target.value,
+                      }))
                     }
                   />
                 </div>

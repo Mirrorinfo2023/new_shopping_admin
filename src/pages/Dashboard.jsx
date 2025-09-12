@@ -14,7 +14,7 @@ import {
   selectDashboardPeriod,
 } from "../redux/slices/dashboardSlice";
 import ProductChart from "../components/common/ProductChart";
-import "../styles/animations.css";
+// import "@/styles/animations.css";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
