@@ -1,109 +1,139 @@
-// src/pages/Login.jsx
-"use client"; // if using app router
-
 import React, { useState } from "react";
-import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
-import { loginUser, selectAuthStatus } from "@/redux/slices/authSlice";
+import { useRouter } from "next/router";
 
 const Login = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
-  const status = useSelector(selectAuthStatus);
 
-  const [credentials, setCredentials] = useState({
-    email: "admin@test.com",
-    password: "Test@123",
-    company_id: "67e920003c16eb613ed5e8a9",
-  });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+
+    const formData = new FormData(e.target);
+    const email = formData.get("email")?.trim();
+    const password = formData.get("password")?.trim();
+
+    const newErrors = {};
+    if (!email) newErrors.email = "Email is required.";
+    if (!password) newErrors.password = "Password is required.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setLoading(true);
+    setErrors({});
 
     try {
-      await dispatch(loginUser(credentials)).unwrap();
-      router.push("/dashboard/new");
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrors({ general: data.message || "Invalid email or password" });
+        setLoading(false);
+        return;
+      }
+
+      sessionStorage.setItem("token", data.token);
+
+      setTimeout(() => {
+        setLoading(false);
+        router.push("/dashboard/new");
+      }, 1500);
     } catch (err) {
       console.error("Login failed:", err);
-      setError(err?.message || "Invalid email or password");
+      setErrors({ general: err.message || "Something went wrong" });
+      setLoading(false);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials((prev) => ({ ...prev, [name]: value }));
-    if (error) setError("");
-  };
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-blue-900 to-blue-600">
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-[420px]">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6 text-center">Mirror</h2>
-        <form onSubmit={handleLogin}>
+        <h2 className="text-3xl font-bold text-blue-900 mb-6 text-center">
+          Mirror
+        </h2>
+        <form onSubmit={handleLogin} className="space-y-6">
           {/* Email */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold">Email</label>
+          <div>
+            <label className="block text-gray-700 font-semibold mb-1">
+              Email
+            </label>
             <input
               type="email"
               name="email"
               placeholder="Email"
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
-              value={credentials.email}
-              onChange={handleInputChange}
-              disabled={status === "loading"}
+              className={`w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 ${errors.email
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+                }`}
+              disabled={loading}
             />
+            {errors.email && (
+              <p className="mt-1 text-xs text-red-600">{errors.email}</p>
+            )}
           </div>
 
           {/* Password */}
-          <div className="mb-4 relative">
-            <label className="block text-gray-700 font-semibold">Password</label>
+          <div className="relative">
+            <label className="block text-gray-700 font-semibold mb-1">
+              Password
+            </label>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12 border-gray-300"
-              value={credentials.password}
-              onChange={handleInputChange}
-              disabled={status === "loading"}
+              className={`w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 pr-10 ${errors.password
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+                }`}
+              disabled={loading}
             />
             <button
               type="button"
-              className="absolute top-10 right-3 text-gray-600 hover:text-gray-800"
+              className="absolute top-8 right-3 text-gray-600 hover:text-gray-800"
               onClick={() => setShowPassword(!showPassword)}
-              disabled={status === "loading"}
+              disabled={loading}
             >
-              {showPassword ? (
-                <EyeOff size={20} className="text-gray-500" />
-              ) : (
-                <Eye size={20} className="text-gray-500" />
-              )}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
+            {errors.password && (
+              <p className="mt-1 text-xs text-red-600">{errors.password}</p>
+            )}
           </div>
 
-          {/* Error */}
-          {error && (
-            <div className="p-3 mb-4 text-sm bg-red-100 text-red-600 rounded-lg">
-              {error}
+          {/* General Error */}
+          {errors.general && (
+            <div className="p-2 text-sm bg-red-100 text-red-600 rounded-md">
+              {errors.general}
             </div>
           )}
 
           {/* Submit */}
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
-          >
-            {status === "loading" ? "Signing in..." : "Sign In"}
-          </button>
+          <div className="pt-2"> {/* adds some space above the button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 text-sm"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
 };
 
+Login.noLayout = true;
 export default Login;
