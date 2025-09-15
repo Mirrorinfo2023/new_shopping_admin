@@ -2,17 +2,17 @@ import { apiRequest } from "../client";
 import { ENDPOINTS } from "../config";
 
 export const getAuthToken = () => {
-  return localStorage.getItem("token");
+  return sessionStorage.getItem("token");
 };
 
 export const setAuthToken = (token) => {
   if (token) {
-    localStorage.setItem("token", token);
+    sessionStorage.setItem("token", token);
   }
 };
 
 export const clearAuthData = () => {
-  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
 };
 
 export const login = async (credentials) => {

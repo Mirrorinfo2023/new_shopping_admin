@@ -7,14 +7,14 @@
 
 // const ChatApp = () => {
 //   const messagesEndRef = useRef(null);
-//   const [name, setName] = useState(() => localStorage.getItem("chatUserName") || "");
+//   const [name, setName] = useState(() => sessionStorage.getItem("chatUserName") || "");
 //   const [joined, setJoined] = useState(() => {
-//     const savedJoinState = localStorage.getItem("chatJoined");
+//     const savedJoinState = sessionStorage.getItem("chatJoined");
 //     return savedJoinState ? JSON.parse(savedJoinState) : false;
 //   });
 //   const [messages, setMessages] = useState(() => {
 //     try {
-//       const savedMessages = localStorage.getItem("chatMessages");
+//       const savedMessages = sessionStorage.getItem("chatMessages");
 //       if (savedMessages) {
 //         // Filter out invalid messages
 //         const parsedMessages = JSON.parse(savedMessages);
@@ -45,7 +45,7 @@
     
 //     if (validMessages.length !== messages.length) {
 //       setMessages(validMessages);
-//       localStorage.setItem("chatMessages", JSON.stringify(validMessages));
+//       sessionStorage.setItem("chatMessages", JSON.stringify(validMessages));
 //     }
 //   }, []);
 
@@ -72,7 +72,7 @@
 //         if (!messageWithTimestamp.text) return prev;
         
 //         const newMessages = [...prev, messageWithTimestamp];
-//         localStorage.setItem("chatMessages", JSON.stringify(newMessages));
+//         sessionStorage.setItem("chatMessages", JSON.stringify(newMessages));
 //         return newMessages;
 //       });
 //     });
@@ -89,12 +89,12 @@
 
 //   // Save joined state when it changes
 //   useEffect(() => {
-//     localStorage.setItem("chatJoined", JSON.stringify(joined));
+//     sessionStorage.setItem("chatJoined", JSON.stringify(joined));
 //   }, [joined]);
 
 //   const joinChat = () => {
 //     if (name.trim()) {
-//       localStorage.setItem("chatUserName", name);
+//       sessionStorage.setItem("chatUserName", name);
 //       socket.emit("newuser", name);
 //       setJoined(true);
 //     }
@@ -151,13 +151,13 @@
 //   const handleClearChat = () => {
 //     // Clear messages but stay logged in
 //     setMessages([]);
-//     localStorage.setItem("chatMessages", JSON.stringify([]));
+//     sessionStorage.setItem("chatMessages", JSON.stringify([]));
 //   };
 
 //   const handleLogout = () => {
-//     localStorage.removeItem("chatUserName");
-//     localStorage.removeItem("chatJoined");
-//     localStorage.removeItem("chatMessages");
+//     sessionStorage.removeItem("chatUserName");
+//     sessionStorage.removeItem("chatJoined");
+//     sessionStorage.removeItem("chatMessages");
 //     setJoined(false);
 //     setName("");
 //     setMessages([]);
