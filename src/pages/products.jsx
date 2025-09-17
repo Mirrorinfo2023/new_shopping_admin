@@ -37,11 +37,11 @@ import {
   deleteProductService,
   filterProductsService,
 } from '@/services/products';
-import ProductStatus from "@/components/product/product_status";
+import ProductStatusDialog from "@/components/product/product_status";
 
 // Custom Skeleton component
 const Skeleton = ({ className }) => (
-  <div className={`animate-pulse bg-gray-200 rounded-md ${className}`} />
+  <div className={`animate-pulse bg-gray-200 rounded-md {className}`} />
 );
 
 export default function ProductsDashboard() {
@@ -51,6 +51,8 @@ export default function ProductsDashboard() {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+const [productIds, setProductIds] = useState([]); 
 
   const router = useRouter();
 
@@ -94,11 +96,11 @@ export default function ProductsDashboard() {
   };
 
   const viewProductDetails = (productId) => {
-    router.push(`/products/details/${productId}`);
+    router.push(`/products/details/{productId}`);
   };
 
   const handleEdit = (productId) => {
-    router.push(`/products/edit/${productId}`);
+    router.push(`/products/edit/{productId}`);
   };
 
   const applyFilters = async () => {
@@ -181,6 +183,22 @@ export default function ProductsDashboard() {
               <Plus size={18} /> Add Product
             </Button>
           </Link>
+          
+              <Button
+        className="flex gap-2 px-4 py-2 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow hover:shadow-md transition-all duration-200"
+        onClick={() => setOpen(true)}
+      >
+        <Plus size={18} /> Change Product Status
+      </Button>
+
+      {/* Dialog */}
+      <ProductStatusDialog
+        productIds={productIds}
+        open={open}
+        setOpen={setOpen} // control open state from parent
+      />
+    
+          
            <div>
       {/* <h2>Product 1</h2> */}
       {/* <ProductStatus productIds={productId} /> */}
@@ -203,8 +221,8 @@ export default function ProductsDashboard() {
                     <span className="text-xs font-medium text-green-500 ml-1">{item.trend}</span>
                   </div>
                 </div>
-                <div className={`rounded-lg p-3 ${item.bgColor}`}>
-                  <item.icon className={`w-6 h-6 ${item.color}`} />
+                <div className={`rounded-lg p-3 {item.bgColor}`}>
+                  <item.icon className={`w-6 h-6 {item.color}`} />
                 </div>
               </div>
               <div className="bg-gray-100 px-5 py-2 text-xs text-gray-500">
@@ -334,7 +352,7 @@ export default function ProductsDashboard() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
+                        <span className={`px-2 py-1 rounded-full text-xs {
                           product.ratings?.average > 0 
                             ? 'bg-green-100 text-green-700' 
                             : 'bg-amber-100 text-amber-700'

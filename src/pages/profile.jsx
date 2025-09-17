@@ -57,7 +57,7 @@ const ShoppingAdminProfile = () => {
 
   const performanceMetrics = {
     conversionRate: '3.2%',
-    averageOrderValue: '$124.50',
+    averageOrderValue: '124.50',
     customerSatisfaction: '4.7/5.0'
   };
 

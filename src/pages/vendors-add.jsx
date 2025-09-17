@@ -44,6 +44,52 @@ const VendorAdd = () => {
     businessLicense: "license.jpg",
   });
 
+  const [errors, setErrors] = useState({});
+
+  // ---------------- VALIDATION ----------------
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.vendorName.trim()) newErrors.vendorName = "Vendor name is required";
+    if (!formData.businessName.trim()) newErrors.businessName = "Business name is required";
+    
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Enter a valid email";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^\d{10}$/.test(formData.phone)) {
+      newErrors.phone = "Phone must be 10 digits";
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (!formData.gstNumber.trim()) newErrors.gstNumber = "GST number is required";
+    if (!formData.panNumber.trim()) newErrors.panNumber = "PAN number is required";
+    if (!formData.aadharNumber.trim()) newErrors.aadharNumber = "Aadhar number is required";
+
+    // Address
+    Object.entries(formData.address).forEach(([key, value]) => {
+      if (!value.trim()) newErrors[`address.${key}`] = `${key} is required`;
+    });
+
+    // Bank Details
+    Object.entries(formData.bankDetails).forEach(([key, value]) => {
+      if (!value.trim()) newErrors[`bankDetails.${key}`] = `${key} is required`;
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // ---------------- CHANGE HANDLER ----------------
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -60,6 +106,9 @@ const VendorAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return; 
+    }
 
     try {
       const payload = {
@@ -69,13 +118,9 @@ const VendorAdd = () => {
 
       console.log("Submitting vendor data:", payload);
 
-      const response = await axios.post(
-        "/api/vendors/create",
-        payload,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.post("/api/vendors/create", payload, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (response.data.success) {
         alert("Vendor created successfully!");
@@ -88,7 +133,6 @@ const VendorAdd = () => {
       alert("Failed to create vendor. Check console for details.");
     }
   };
-  
 
   return (
     <div className="p-6 md:p-10 bg-gradient-to-tr from-gray-100 to-white min-h-screen">
@@ -121,6 +165,9 @@ const VendorAdd = () => {
                     value={formData[field]}
                     onChange={handleChange}
                   />
+                  {errors[field] && (
+                    <p className="text-red-500 text-sm">{errors[field]}</p>
+                  )}
                 </div>
               ))}
             </div>
@@ -136,6 +183,11 @@ const VendorAdd = () => {
                     value={formData.address[key]}
                     onChange={handleChange}
                   />
+                  {errors[`address.${key}`] && (
+                    <p className="text-red-500 text-sm">
+                      {errors[`address.${key}`]}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -151,6 +203,11 @@ const VendorAdd = () => {
                     value={formData.bankDetails[key]}
                     onChange={handleChange}
                   />
+                  {errors[`bankDetails.${key}`] && (
+                    <p className="text-red-500 text-sm">
+                      {errors[`bankDetails.${key}`]}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

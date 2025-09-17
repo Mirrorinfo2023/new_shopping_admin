@@ -52,7 +52,7 @@ const Dashboard = () => {
     },
     {
       title: "Revenue",
-      value: `$${stats?.totalRevenue?.toLocaleString() || "0"}`,
+      value: `${stats?.totalRevenue?.toLocaleString() || "0"}`,
       icon: <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />,
       change: {
         value: `${Math.abs(stats?.percentChanges?.revenue || 0)}%`,

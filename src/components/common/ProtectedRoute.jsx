@@ -32,10 +32,10 @@ const ProtectedRoute = ({ children, isProtected }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/Login" state={{ from: location }} replace />;
   }
 
-  if (isAuthenticated && location.pathname === "/login") {
+  if (isAuthenticated && location.pathname === "/Login") {
     return <Navigate to={location.state?.from?.pathname || "/dashboard"} replace />;
   }
 

@@ -8,43 +8,14 @@ import {
 } from "lucide-react";
 
 const Users = () => {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Admin",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      role: "User",
-      status: "Inactive",
-    },
-    {
-      id: 3,
-      name: "Michael Brown",
-      email: "michael@example.com",
-      role: "User",
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "Emily Davis",
-      email: "emily@example.com",
-      role: "Admin",
-      status: "Active",
-    },
-    {
-      id: 5,
-      name: "David Wilson",
-      email: "david@example.com",
-      role: "User",
-      status: "Inactive",
-    },
-  ]);
+const [users, setUsers] = useState([
+  { id: 1, name: "Rohan Sharma", email: "rohan@example.com", role: "Admin", status: "Active" },
+  { id: 2, name: "Priya Singh", email: "priya@example.com", role: "User", status: "Inactive" },
+  { id: 3, name: "Amit Kumar", email: "amit@example.com", role: "User", status: "Active" },
+  { id: 4, name: "Sneha Patel", email: "sneha@example.com", role: "Admin", status: "Active" },
+  { id: 5, name: "Vikram Joshi", email: "vikram@example.com", role: "User", status: "Inactive" },
+]);
+
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({

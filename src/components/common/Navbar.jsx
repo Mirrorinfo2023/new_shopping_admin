@@ -22,7 +22,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await clearAuthData();
-    router.replace("/login");
+    router.replace("/Login");
   };
 
   return (

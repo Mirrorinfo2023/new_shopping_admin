@@ -150,7 +150,7 @@ const DashboardScreen = () => {
               {localStores.map((store, index) => (
                 <tr key={store.id || index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-sm text-gray-900">{store.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">${store.amount.toFixed(2)}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{store.amount.toFixed(2)}</td>
                   <td className="px-6 py-4 text-sm">
                     <select
                       value={store.status}
@@ -164,7 +164,7 @@ const DashboardScreen = () => {
                       ))}
                     </select>
                   </td>
-                  <td className="px-6 py-4 text-sm font-semibold text-gray-900">${store.amount.toFixed(2)}</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-gray-900">{store.amount.toFixed(2)}</td>
                   <td className="px-6 py-4 text-right text-sm space-x-2">
                     <button className="text-blue-600 hover:text-blue-900" title="View Order">
                       <ShoppingCart size={18} />
@@ -300,7 +300,7 @@ const DashboardScreen = () => {
               >
                 <span>{store.name}</span>
                 <span className="font-semibold text-blue-800">
-                  ${store.amount.toLocaleString()}
+                  {store.amount.toLocaleString()}
                 </span>
               </li>
             ))}

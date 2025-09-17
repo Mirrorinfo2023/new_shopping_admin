@@ -85,18 +85,18 @@ const productItems = {
       path: "/category",
       icon: <PlusCircle size={ICON_SIZE.sub} />,
       submenu: [
-        {
-          title: "Categories List",
-          path: "/category-list",
-          icon: <List size={ICON_SIZE.sub} />,
-        },
+        // {
+        //   title: "Categories List",
+        //   path: "/category-list",
+        //   icon: <List size={ICON_SIZE.sub} />,
+        // },
         // {
         //   title: "Sub Categories List",
         //   path: "/category/sub-categories",
         //   icon: <List size={ICON_SIZE.sub} />,
         // },
         {
-          title: "Add Category",
+          title: "Category",
           path: "/category",
           icon: <PlusCircle size={ICON_SIZE.sub} />,
         },
@@ -104,7 +104,7 @@ const productItems = {
     },
     {
       title: "Cancel Products",
-      path: "/product/cancel",
+      path: "/products/cancel",
       icon: <List size={ICON_SIZE.sub} />,
     },
   ],

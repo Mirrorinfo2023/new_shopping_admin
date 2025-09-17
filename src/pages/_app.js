@@ -22,7 +22,7 @@ export default function MyApp({ Component, pageProps }) {
 
     const token = sessionStorage.getItem("token"); // JWT or your auth method
     if (!token) {
-      router.replace("/login"); // redirect to login if not authenticated
+      router.replace("/Login"); // redirect to login if not authenticated
     } else {
       setAuthorized(true);
     }

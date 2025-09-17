@@ -55,7 +55,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     clearAuthData();
-    window.location.href = "/login";
+    window.location.href = "/Login";
   };
 
   useEffect(() => {

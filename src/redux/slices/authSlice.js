@@ -14,7 +14,7 @@ export const verifyToken = createAsyncThunk("auth/verifyToken", async (token, { 
 });
 
 // Async thunk to log in the user
-export const loginUser = createAsyncThunk("auth/login", async (credentials, { rejectWithValue }) => {
+export const loginUser = createAsyncThunk("auth/Login", async (credentials, { rejectWithValue }) => {
   try {
     const response = await loginApi(credentials);
     console.log("Login API Response:", response);

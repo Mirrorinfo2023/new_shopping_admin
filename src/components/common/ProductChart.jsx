@@ -145,7 +145,7 @@ const ProductChart = () => {
             label: (context) => {
               const value = context.parsed?.y || context.parsed || 0;
               return chartType === "revenue"
-                ? `$${value.toLocaleString()}`
+                ? `${value.toLocaleString()}`
                 : value.toLocaleString();
             },
           },
@@ -173,7 +173,7 @@ const ProductChart = () => {
           ticks: {
             font: { size: isMobile ? 10 : 12 },
             callback: (value) =>
-              chartType === "revenue" ? `$${value}` : value,
+              chartType === "revenue" ? `${value}` : value,
           },
         },
       },
