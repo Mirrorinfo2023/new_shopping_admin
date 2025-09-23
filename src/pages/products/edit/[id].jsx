@@ -13,6 +13,7 @@ export default function EditProductPage() {
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
   const [formData, setFormData] = useState({
     productName: "",
@@ -43,7 +44,7 @@ export default function EditProductPage() {
 
   const loadProduct = async () => {
     try {
-      const res = await fetch(`/api/products/${id}`);
+      const res = await fetch(`${BASE_URL}products/${id}`);
       if (!res.ok) throw new Error("Failed to fetch product details");
       const data = await res.json();
       const productData = data.product;
@@ -95,7 +96,7 @@ export default function EditProductPage() {
         images: formData.images.map((url) => ({ url, alt: "" })),
       };
 
-      const res = await fetch(`/api/products/${id}`, {
+      const res = await fetch(`${BASE_URL}products/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -116,7 +117,7 @@ export default function EditProductPage() {
     if (!formData.status) return;
 
     try {
-      const res = await fetch(`/api/products/update-status`, {
+      const res = await fetch(`${BASE_URL}products/update-status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productIds: id, status: formData.status }),
@@ -126,7 +127,7 @@ export default function EditProductPage() {
 
       if (data.success) {
         alert("Status updated successfully!");
-        loadProduct(); // refresh product data
+        loadProduct();
       } else {
         alert("Failed to update status: " + (data.message || ""));
       }
@@ -289,7 +290,7 @@ function AttributesManager({ attributes, setAttributes }) {
       <label className="block mb-1 font-semibold">Attributes</label>
       {attributes.map((a, idx) => (
         <div key={idx} className="flex gap-2 mb-2">
-          <Input placeholder="Attribute Name" value={a.attributeName} onChange={(e) => updateAttr(idx, "attributeName", e.target.value)} />
+          <Input placeholder="Attribute Name" value={a.key} onChange={(e) => updateAttr(idx, "attributeName", e.target.value)} />
           <Input placeholder="Value" value={a.value} onChange={(e) => updateAttr(idx, "value", e.target.value)} />
           <Button type="button" onClick={() => removeAttr(idx)} className="bg-red-600 text-white">X</Button>
         </div>

@@ -15,6 +15,7 @@ import {
 import axios from 'axios';
 
 const statuses = ["All", "Pending", "Approved", "Denied"];
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
 export default function VendorWithdrawTable() {
   const [filter, setFilter] = useState("All");
@@ -24,7 +25,7 @@ export default function VendorWithdrawTable() {
   const fetchWithdrawals = async () => {
     setLoading(true);
     try {
-const res = await axios.get("/api/withdrawals"); 
+      const res = await axios.get(`https://secure1.mirrorhub.in/api/withdrawals`);
       setData(res.data);
     } catch (error) {
       console.error("Failed to fetch withdrawals:", error);

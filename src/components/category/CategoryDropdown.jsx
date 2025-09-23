@@ -5,6 +5,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 export default function CategoryDropdown({ value, onChange }) {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
   useEffect(() => {
     loadCategories();
@@ -12,7 +13,7 @@ export default function CategoryDropdown({ value, onChange }) {
 
   const loadCategories = async () => {
     try {
-      const res = await fetch("/api/catagory/getallcategories");
+      const res = await fetch(`${BASE_URL}catagory/getallcategories`);
       if (!res.ok) throw new Error("Failed to fetch categories");
       const data = await res.json();
       setCategories(data.categories || []);

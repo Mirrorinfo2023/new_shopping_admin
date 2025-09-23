@@ -6,7 +6,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*", 
-        destination: "https://secure1.mirrorhub.in/api/:path*", 
+        destination:"https://localhost:3002/api/:path*",  //"https://secure1.mirrorhub.in/api/:path*", 
       },
     ];
   },

@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+
 // Fetch all products (basic)
 export const fetchProductsService = async () => {
     try {
-        const res = await fetch('/api/products/basic');
+        const res = await fetch(`${BASE_URL}products/basic`);
         if (!res.ok) throw new Error('Failed to fetch products');
         const data = await res.json();
         return data.products || [];
@@ -16,7 +18,7 @@ export const fetchProductsService = async () => {
 // Delete a product by ID
 export const deleteProductService = async (productId) => {
     try {
-        const res = await axios.post(`/api/products/delete/${productId}`);
+        const res = await axios.post(`${BASE_URL}products/delete/${productId}`);
         return res.data;
     } catch (err) {
         console.error('Error deleting product:', err);
@@ -26,7 +28,7 @@ export const deleteProductService = async (productId) => {
 
 export const fetchProductByIdService = async (id) => {
     try {
-        const res = await fetch(`/api/product/${id}`);
+        const res = await fetch(`${BASE_URL}product/${id}`);
         if (!res.ok) throw new Error('Failed to fetch product');
         const data = await res.json();
         if (data.error) throw new Error(data.error);
@@ -41,7 +43,7 @@ export const fetchProductByIdService = async (id) => {
 
 export const createProductService = async (productData) => {
   try {
-    const res = await axios.post('/api/products/create', productData);
+    const res = await axios.post(`${BASE_URL}products/create`, productData);
     return res.data;
   } catch (err) {
     console.error('Error creating product:', err.response?.data || err.message);
@@ -52,7 +54,7 @@ export const createProductService = async (productData) => {
 
 export const updateProductService = async (productId, updatedData) => {
   try {
-    const res = await axios.post(`/api/products/${productId}`, updatedData);
+    const res = await axios.post(`${BASE_URL}products/${productId}`, updatedData);
     return res.data;
   } catch (err) {
     console.error('Error updating product:', err.response?.data || err.message);
@@ -64,7 +66,7 @@ export const updateProductService = async (productId, updatedData) => {
 export const filterProductsService = async (filters) => {
   try {
     const query = new URLSearchParams(filters).toString();
-    const res = await fetch(`/api/products/filter?${query}`);
+    const res = await fetch(`${BASE_URL}products/filter?${query}`);
     if (!res.ok) throw new Error('Failed to filter products');
     const data = await res.json();
     return data.products || [];
@@ -81,7 +83,7 @@ export const updateProductStatusService = async (productIds, status) => {
       status,
     };
 
-    const res = await ApiService.post("products/update-status", payload);
+    const res = await ApiService.post(`${BASE_URL}products/update-status`, payload);
     return res; // will return { status: true, data: ... } from ApiService
   } catch (error) {
     console.error("Update status error:", error);

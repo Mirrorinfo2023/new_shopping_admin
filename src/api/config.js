@@ -1,7 +1,8 @@
 export const API_CONFIG = {
   // BASE_URL: "https://ecom-backend.plusdistribution.in/api",
-  BASE_URL: "http://localhost:3001/api",
+  // BASE_URL: "http://localhost:3001/api",
   // BASE_URL: "https://secure.aladin25.live/api",
+  BASE_URL: process.env.NEXT_PUBLIC_BASE_API_URL ,
   TIMEOUT: 15000,
 };
 
@@ -71,8 +72,8 @@ export const formatUrl = (url, params = {}) => {
 
   return formattedUrl;
 };
-export const getEndpointUrl = (endpoint) => {
-  const baseUrl = API_CONFIG.BASE_URL.replace(/\/$/, "");
-  const cleanEndpoint = endpoint.replace(/^\//, "");
-  return `${baseUrl}/${cleanEndpoint}`;
-};
+// export const getEndpointUrl = (endpoint) => {
+//   // const baseUrl = API_CONFIG.BASE_URL.replace(/\/$/, "");
+//   const cleanEndpoint = endpoint.replace(/^\//, "");
+//   return `${baseUrl}/${cleanEndpoint}`;
+// };

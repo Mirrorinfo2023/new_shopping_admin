@@ -11,8 +11,15 @@ const USERS = [
   },
   {
     id: "1",
-    email: "admin@test.com",
-    password: "Test@123",   // In production, store hashed passwords
+    email: "mayway@superadmin.com",
+    password: "Mirror@#9096",   
+    name: "Admin User",
+    role: "admin",
+  },
+   {
+    id: "1",
+    email: "shopping@superadmin.com",
+    password: "Mirror@#9096",   
     name: "Admin User",
     role: "admin",
   },

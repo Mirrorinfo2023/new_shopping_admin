@@ -9,6 +9,7 @@ export default function ProductDetailsPage() {
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
   useEffect(() => {
     if (id) loadProduct();
@@ -16,7 +17,7 @@ export default function ProductDetailsPage() {
 
   const loadProduct = async () => {
     try {
-      const res = await fetch(`/api/products/${id}`);
+      const res = await fetch(`${BASE_URL}products/${id}`);
       const data = await res.json();
       setProduct(data.product); // API returns { success, product }
     } catch (err) {

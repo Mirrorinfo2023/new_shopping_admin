@@ -8,6 +8,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -47,8 +48,8 @@ const Login = () => {
 
       setTimeout(() => {
         setLoading(false);
-        router.push("/dashboard/new");
-      }, 1500);
+        router.replace("/dashboard/new");
+      }, 100);
     } catch (err) {
       console.error("Login failed:", err);
       setErrors({ general: err.message || "Something went wrong" });
@@ -60,7 +61,7 @@ const Login = () => {
     <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-blue-900 to-blue-600">
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-[420px]">
         <h2 className="text-3xl font-bold text-blue-900 mb-6 text-center">
-          Mirror
+          Shopping Admin
         </h2>
         <form onSubmit={handleLogin} className="space-y-6">
           {/* Email */}

@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getEndpointUrl } from "../../api/config";
 import { addCategory, deleteToggle, editCategoryData, listCategory, toggleCategory } from "@/api/apicall/category";
 import { fetchActiveCategories } from "./productSlice";
-
-const API_URL = getEndpointUrl("/api/dashboard/category");
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+// const API_URL = getEndpointUrl(`https://secure1.mirrorhub.in/api/dashboard/category`);
 
 let mockCategories = [];
 const mockAnalytics = {

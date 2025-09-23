@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = '/api/vendors';
+const API_BASE = process.env.NEXT_PUBLIC_BASE_API_URL ;
 
 
 export const fetchVendorByIdService = async (id) => {
