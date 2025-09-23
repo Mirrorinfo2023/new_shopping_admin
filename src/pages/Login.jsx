@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const router = useRouter();
@@ -10,6 +10,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
+  const validateEmail = (email) => {
+    // Simple email regex
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -18,7 +24,12 @@ const Login = () => {
     const password = formData.get("password")?.trim();
 
     const newErrors = {};
-    if (!email) newErrors.email = "Email is required.";
+    if (!email) {
+      newErrors.email = "Email is required.";
+    } else if (!validateEmail(email)) {
+      newErrors.email = "Enter a valid email address.";
+    }
+
     if (!password) newErrors.password = "Password is required.";
 
     if (Object.keys(newErrors).length > 0) {
@@ -67,7 +78,7 @@ const Login = () => {
           {/* Email */}
           <div>
             <label className="block text-gray-700 font-semibold mb-1">
-              Email
+              Email <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -87,7 +98,7 @@ const Login = () => {
           {/* Password */}
           <div className="relative">
             <label className="block text-gray-700 font-semibold mb-1">
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <input
               type={showPassword ? "text" : "password"}
@@ -101,7 +112,7 @@ const Login = () => {
             />
             <button
               type="button"
-              className="absolute top-8 right-3 text-gray-600 hover:text-gray-800"
+              className="absolute top-8 right-3 text-gray-600 hover:text-gray-800 cursor-pointer mt-1"
               onClick={() => setShowPassword(!showPassword)}
               disabled={loading}
             >
@@ -120,15 +131,26 @@ const Login = () => {
           )}
 
           {/* Submit */}
-          <div className="pt-2"> {/* adds some space above the button */}
+          <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 text-sm"
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 text-sm cursor-pointer disabled:opacity-50"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </div>
+
+          {/* Forgot Password */}
+          <p className="text-sm text-gray-500 text-center mt-2">
+            Forgot password?{" "}
+            <span
+              className="text-indigo-600 cursor-pointer"
+              onClick={() => router.replace("/forgot-password")}
+            >
+              Click here
+            </span>
+          </p>
         </form>
       </div>
     </div>
