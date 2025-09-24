@@ -27,19 +27,19 @@ export default function ProductDetailsPage() {
       setLoading(false);
     }
   };
-if (loading)
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <p className="text-lg text-gray-600">Loading...</p>
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg text-gray-600">Loading...</p>
+      </div>
+    );
 
-if (!product)
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <p className="text-lg text-red-500">Product not found!</p>
-    </div>
-  );
+  if (!product)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg text-red-500">Product not found!</p>
+      </div>
+    );
 
   return (
     <div className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">

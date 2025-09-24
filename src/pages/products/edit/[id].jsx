@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import CategoryDropdown from "@/components/category/CategoryDropdown";
+import { ArrowLeft } from "lucide-react";
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -144,7 +145,13 @@ export default function EditProductPage() {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen space-y-6">
-      <Button className="mb-4" onClick={() => router.back()}>Back</Button>
+      <Button
+        className="mb-4 px-4 py-2 bg-gray-100 text-gray-800 hover:bg-gray-200 hover:text-gray-900 rounded-lg shadow-sm transition duration-200 flex items-center gap-2 cursor-pointer"
+        onClick={() => router.back()}
+      >
+        <ArrowLeft size={16} /> Back
+      </Button>
+
       <h1 className="text-3xl font-bold text-gray-800">Edit Product</h1>
 
       <Card className="rounded-2xl shadow-md p-4">

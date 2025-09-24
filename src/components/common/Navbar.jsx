@@ -7,9 +7,9 @@ import { clearAuthData } from "@/api/apicall/auth";
 
 const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const router = useRouter();
-  const profileRef = useRef(null);
 
+  const profileRef = useRef(null);
+ const router = useRouter(); // ✅ initialize router
   useEffect(() => {
     const handler = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -20,9 +20,17 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  const clearAuthData = () => {
+    // Clear localStorage
+    localStorage.clear();
+
+    // Clear sessionStorage
+    sessionStorage.clear();
+  };
+
   const handleLogout = async () => {
-    await clearAuthData();
-    router.replace("/Login");
+    clearAuthData();
+    router.replace("/Login"); // Redirect to login page
   };
 
   return (
@@ -47,21 +55,21 @@ const Navbar = () => {
               <div className="py-1">
                 <button
                   onClick={() => router.push("/profile")}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                 >
                   <User className="h-4 w-4" />
                   Your Profile
                 </button>
                 <button
                   onClick={() => router.push("/settings")}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                 >
                   <Settings className="h-4 w-4" />
                   Settings
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout

@@ -42,7 +42,7 @@
 //   useEffect(() => {
 //     // Filter out invalid messages from current state
 //     const validMessages = messages.filter(msg => msg && msg.text && msg.sender);
-    
+
 //     if (validMessages.length !== messages.length) {
 //       setMessages(validMessages);
 //       sessionStorage.setItem("chatMessages", JSON.stringify(validMessages));
@@ -58,7 +58,7 @@
 //     socket.on("group", (data) => {
 //       // Validate incoming message
 //       if (!data || !data.text) return;
-      
+
 //       setMessages((prev) => {
 //         // Ensure the message has a timestamp and required fields
 //         const messageWithTimestamp = {
@@ -67,10 +67,10 @@
 //           sender: data.sender || "unknown",
 //           timestamp: data.timestamp || new Date().toISOString()
 //         };
-        
+
 //         // Only add valid messages
 //         if (!messageWithTimestamp.text) return prev;
-        
+
 //         const newMessages = [...prev, messageWithTimestamp];
 //         sessionStorage.setItem("chatMessages", JSON.stringify(newMessages));
 //         return newMessages;
@@ -154,15 +154,18 @@
 //     sessionStorage.setItem("chatMessages", JSON.stringify([]));
 //   };
 
-//   const handleLogout = () => {
-//     sessionStorage.removeItem("chatUserName");
-//     sessionStorage.removeItem("chatJoined");
-//     sessionStorage.removeItem("chatMessages");
-//     setJoined(false);
-//     setName("");
-//     setMessages([]);
-//     socket.emit("disconnect");
-//   };
+// const clearAuthData = () => {
+//   // Clear localStorage
+//   localStorage.clear();
+
+//   // Clear sessionStorage
+//   sessionStorage.clear();
+// };
+
+// const handleLogout = async () => {
+//   clearAuthData();
+//   router.replace("/Login"); // Redirect to login page
+// };
 
 //   // Filter out messages that don't have text
 //   const validMessages = messages.filter(msg => msg && msg.text);

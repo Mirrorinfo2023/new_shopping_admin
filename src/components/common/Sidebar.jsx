@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronRight, Menu, X } from "lucide-react";
 import { sidebarData } from "../common/sidebarData";
 import { clearAuthData } from "@/api/apicall/auth";
+import { useRouter } from "next/router";
 
 const MobileOverlay = ({ isOpen, onClose }) =>
   isOpen ? (
@@ -30,7 +31,7 @@ const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState({});
   const pathname = usePathname();
-
+  const router = useRouter();
   const toggleSubmenu = (title) => {
     setOpenSubmenus((prev) => ({
       ...prev,
@@ -53,9 +54,17 @@ const Sidebar = () => {
     openActiveSubmenus(sidebarData);
   }, [pathname]);
 
-  const handleLogout = () => {
+  const clearAuthData = () => {
+    // Clear localStorage
+    localStorage.clear();
+
+    // Clear sessionStorage
+    sessionStorage.clear();
+  };
+
+  const handleLogout = async () => {
     clearAuthData();
-    window.location.href = "/Login";
+    router.replace("/Login"); // Redirect to login page
   };
 
   useEffect(() => {
@@ -71,13 +80,10 @@ const Sidebar = () => {
           <div key={index}>
             <button
               onClick={() => toggleSubmenu(subItem.title)}
-              className={`flex items-center justify-between w-full ${
-                level === 1 ? "px-8" : level === 2 ? "px-10" : "px-12"
-              } py-2 hover:bg-blue-600 transition-colors ${
-                openSubmenus[subItem.title] ? "bg-blue-600/50" : ""
-              } ${level > 1 ? "text-sm" : ""} ${
-                level === 3 ? "text-blue-100/90" : ""
-              }`}
+              className={`flex items-center justify-between w-full ${level === 1 ? "px-8" : level === 2 ? "px-10" : "px-12"
+                } py-2 hover:bg-blue-600 transition-colors ${openSubmenus[subItem.title] ? "bg-blue-600/50" : ""
+                } ${level > 1 ? "text-sm" : ""} ${level === 3 ? "text-blue-100/90" : ""
+                }`}
             >
               <div className="flex items-center gap-3">
                 {subItem.icon && <span>{subItem.icon}</span>}
@@ -98,13 +104,10 @@ const Sidebar = () => {
         <Link
           href={subItem.path}
           onClick={() => setIsSidebarOpen(false)} // close sidebar on mobile
-          className={`block ${
-            level === 1 ? "px-8" : level === 2 ? "px-10" : "px-12"
-          } py-2 hover:bg-blue-600 transition-colors ${
-            isActive ? "bg-blue-600/50" : ""
-          } ${level > 1 ? "text-sm" : ""} ${
-            level === 3 ? "text-blue-100/90 text-xs" : ""
-          } flex items-center gap-3`}
+          className={`block ${level === 1 ? "px-8" : level === 2 ? "px-10" : "px-12"
+            } py-2 hover:bg-blue-600 transition-colors ${isActive ? "bg-blue-600/50" : ""
+            } ${level > 1 ? "text-sm" : ""} ${level === 3 ? "text-blue-100/90 text-xs" : ""
+            } flex items-center gap-3`}
         >
           {subItem.icon && <span>{subItem.icon}</span>}
           <span>{subItem.title}</span>
@@ -120,9 +123,8 @@ const Sidebar = () => {
         <div key={index}>
           <button
             onClick={() => toggleSubmenu(item.title)}
-            className={`flex items-center justify-between w-full px-4 py-3 text-left hover:bg-blue-600 transition-colors ${
-              openSubmenus[item.title] ? "bg-blue-600" : ""
-            }`}
+            className={`flex items-center justify-between w-full px-4 py-3 text-left hover:bg-blue-600 transition-colors cursor-pointer ${openSubmenus[item.title] ? "bg-blue-600" : ""
+              }`}
           >
             <div className="flex items-center gap-3">
               {item.icon}
@@ -142,7 +144,7 @@ const Sidebar = () => {
         <button
           key={index}
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-blue-600 transition-colors"
+          className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-blue-600 transition-colors cursor-pointer"
         >
           {item.icon}
           <span>{item.title}</span>
@@ -155,9 +157,8 @@ const Sidebar = () => {
         key={index}
         href={item.path || "/"}
         onClick={() => setIsSidebarOpen(false)}
-        className={`flex items-center gap-3 px-4 py-3 hover:bg-blue-600 transition-colors ${
-          isActive ? "bg-blue-600" : ""
-        }`}
+        className={`flex items-center gap-3 px-4 py-3 hover:bg-blue-600 transition-colors ${isActive ? "bg-blue-600" : ""
+          }`}
       >
         {item.icon}
         <span>{item.title}</span>
@@ -171,15 +172,14 @@ const Sidebar = () => {
       <MobileOverlay isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       <aside
-        className={`fixed top-0 left-0 h-screen w-64 bg-blue-700 text-white overflow-y-auto z-40 transition-transform duration-300 ease-in-out lg:translate-x-0 hide-scrollbar ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-screen w-64 bg-blue-700 text-white overflow-y-auto z-40 transition-transform duration-300 ease-in-out lg:translate-x-0 hide-scrollbar ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="sticky top-0 bg-blue-800 p-4">
           <h1 className="text-xl font-bold">Mirror Admin</h1>
         </div>
 
-        <nav className="mt-2">{sidebarData.map((item, index) => renderMenuItem(item, index))}</nav>
+        <nav className="mt-2 cursor-pointer">{sidebarData.map((item, index) => renderMenuItem(item, index))}</nav>
       </aside>
     </>
   );

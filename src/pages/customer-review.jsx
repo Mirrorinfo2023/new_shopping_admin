@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { 
-  Download, 
-  Search, 
-  Filter, 
-  Star, 
-  Eye, 
+import {
+  Download,
+  Search,
+  Filter,
+  Star,
+  Eye,
   Calendar,
   User,
   Package,
@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+const Base_url = process.env.NEXT_PUBLIC_BASE_API_URL
 export default function CustomerReviews() {
   const [reviews, setReviews] = useState([]);
   const [search, setSearch] = useState("");
@@ -34,7 +34,7 @@ export default function CustomerReviews() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://secure1.mirrorhub.in/api/reviews/getallreviews"
+        `${Base_url}reviews/getallreviews`
       );
       if (response.data) {
         const mapped = response.data.map((r, idx) => ({
@@ -216,16 +216,16 @@ export default function CustomerReviews() {
                   className="pl-10 pr-4 py-2 w-full"
                 />
               </div>
-              
+
               <div className="flex gap-3 flex-wrap">
                 <select className="border rounded-lg px-3 py-2 text-sm min-w-[140px]">
                   <option>All Products</option>
                 </select>
-                
+
                 <select className="border rounded-lg px-3 py-2 text-sm min-w-[140px]">
                   <option>All Customers</option>
                 </select>
-                
+
                 <select className="border rounded-lg px-3 py-2 text-sm min-w-[140px]">
                   <option>All Ratings</option>
                   <option>5 Stars</option>

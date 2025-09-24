@@ -82,39 +82,50 @@ export default function ProductsDashboard() {
   };
 
   // Delete product
-const handleDelete = async (productId) => {
-  if (!confirm('Are you sure you want to delete this product?')) return;
+  // Delete product
+  const handleDelete = async (productId) => {
 
-  try {
-    const res = await fetch(`${BASE_URL}products/delete/${productId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    console.log("product id is ",productId)
+    if (!confirm('Are you sure you want to delete this product?')) return;
 
-    if (res.status === 401) {
-      const errData = await res.json();
-      throw new Error(errData.message || 'Failed to delete product');
+    try {
+      const res = await fetch(`${BASE_URL}products/delete/${productId}`, {
+        method: 'post', // usually DELETE for deletion
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to delete product');
+      }
+
+      // Remove deleted product from state
+      setProducts((prev) => prev.filter((p) => p._id !== productId));
+      setFiltered((prev) => prev.filter((p) => p._id !== productId));
+
+      alert('Product deleted successfully!');
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      alert(err.message || 'Something went wrong while deleting the product.');
     }
-    setProducts(prev => prev.filter(p => p._id !== productId));
-    setFiltered(prev => prev.filter(p => p._id !== productId));
+  };
 
-    alert('Product deleted successfully!');
-  } catch (err) {
-    console.error('Error deleting product:', err);
-    alert(err.message || 'Something went wrong while deleting the product.');
-  }
-};
+  // Edit product
+  const handleEdit = (productId) => {
+    console.log("product id is ",productId)
+    router.push(`/products/edit/${productId}`);
+  };
+
 
 
   const viewProductDetails = (productId) => {
     router.push(`/products/details/${productId}`);
   };
 
-  const handleEdit = (productId) => {
-    router.push(`/products/edit/${productId}`);
-  };
+
 
   const applyFilters = () => {
     let result = [...products];
@@ -141,13 +152,13 @@ const handleDelete = async (productId) => {
   };
 
   const summary = [
-    { 
-      title: 'Total Products', 
-      count: products.length, 
-      icon: ShoppingBag, 
+    {
+      title: 'Total Products',
+      count: products.length,
+      icon: ShoppingBag,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
-      trend: '+12%' 
+      trend: '+12%'
     },
     {
       title: 'Active',
@@ -165,10 +176,10 @@ const handleDelete = async (productId) => {
       bgColor: 'bg-amber-100',
       trend: '+3%'
     },
-    { 
-      title: 'Out of Stock', 
-      count: 0, 
-      icon: XCircle, 
+    {
+      title: 'Out of Stock',
+      count: 0,
+      icon: XCircle,
       color: 'text-red-600',
       bgColor: 'bg-red-100',
       trend: '-2%'
@@ -185,26 +196,26 @@ const handleDelete = async (productId) => {
         </div>
         <div className="flex gap-4">
           <Link href="/product_image_add">
-            <Button className="flex gap-2 px-4 py-2 text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow hover:shadow-md transition-all duration-200">
+            <Button className="flex gap-2 px-4 py-2 text-white bg-gradient-to-r from-purple-600 to-indigo-700 rounded-lg shadow hover:shadow-md transition-all duration-200 cursor-pointer">
               <Plus size={18} /> Add Image
             </Button>
           </Link>
 
           <Link href="/products/add-product">
-            <Button className="flex gap-2 px-4 py-2 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow hover:shadow-md transition-all duration-200">
+            <Button className="flex gap-2 px-4 py-2 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow hover:shadow-md transition-all duration-200 cursor-pointer">
               <Plus size={18} /> Add Product
             </Button>
           </Link>
-           <div className="flex items-center">
-                <Button
-                  onClick={() => setDialogOpen(true)}
-                  className="flex gap-2  text-white bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow hover:shadow-md transition-all duration-200"
-                >
-                  <Upload size={18} /> Bulk Upload / Update Status
-                </Button>
-          
-                <ProductStatusDialog open={dialogOpen} setOpen={setDialogOpen} />
-              </div>
+          <div className="flex items-center">
+            <Button
+              onClick={() => setDialogOpen(true)}
+              className="flex gap-2  text-white bg-gradient-to-r from-green-600 to-green-700 rounded-lg shadow hover:shadow-md transition-all duration-200 cursor-pointer"
+            >
+              <Upload size={18} /> Bulk Upload / Update Status
+            </Button>
+
+            <ProductStatusDialog open={dialogOpen} setOpen={setDialogOpen} />
+          </div>
         </div>
       </div>
 
@@ -343,11 +354,10 @@ const handleDelete = async (productId) => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          product.ratings?.average > 0 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-amber-100 text-amber-700'
-                        }`}>
+                        <span className={`px-2 py-1 rounded-full text-xs ${product.ratings?.average > 0
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-amber-100 text-amber-700'
+                          }`}>
                           {product.ratings?.average > 0 ? 'Active' : 'Low Stock'}
                         </span>
                       </td>
@@ -378,6 +388,7 @@ const handleDelete = async (productId) => {
                           </Button>
                         </div>
                       </td>
+
                     </tr>
                   ))
                 ) : (
@@ -387,8 +398,8 @@ const handleDelete = async (productId) => {
                         <ShoppingBag className="h-12 w-12 text-gray-300 mb-3" />
                         <p className="text-lg font-medium">No products found</p>
                         <p className="text-sm mt-1">Try adjusting your search or filter.</p>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           className="mt-4"
                           onClick={() => {
                             setSearchTerm('');

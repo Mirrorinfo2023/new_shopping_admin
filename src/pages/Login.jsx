@@ -1,37 +1,37 @@
+"use client";
+
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import ReCAPTCHA from "react-google-recaptcha";
+import { Box, Typography, Snackbar, Alert } from "@mui/material";
+import axios from "axios";
 
 const Login = () => {
   const router = useRouter();
-
+  const [alert, setAlert] = useState({ open: false, type: false, message: null });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+  const [captchaToken, setCaptchaToken] = useState(null);
 
-  const validateEmail = (email) => {
-    // Simple email regex
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
+  // ✅ Separate validation function
+  const validateForm = (username, password, captchaToken) => {
+    const newErrors = {};
+    if (!username) newErrors.username = "Username is required.";
+    if (!password) newErrors.password = "Password is required.";
+    if (!captchaToken) newErrors.captcha = "Please verify reCAPTCHA.";
+    return newErrors;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     const formData = new FormData(e.target);
-    const email = formData.get("email")?.trim();
+    const username = formData.get("username")?.trim();
     const password = formData.get("password")?.trim();
 
-    const newErrors = {};
-    if (!email) {
-      newErrors.email = "Email is required.";
-    } else if (!validateEmail(email)) {
-      newErrors.email = "Enter a valid email address.";
-    }
-
-    if (!password) newErrors.password = "Password is required.";
-
+    // Client-side validation
+    const newErrors = validateForm(username, password, captchaToken);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -41,32 +41,52 @@ const Login = () => {
     setErrors({});
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const reqData = { username, password, is_admin: 1, captchaToken };
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-      const data = await res.json();
+      const response = await axios.post(
+        `${API_BASE_URL}/api/users/admin_login`,
+        reqData
+      );
 
-      if (!res.ok) {
-        setErrors({ general: data.message || "Invalid email or password" });
-        setLoading(false);
-        return;
+      if (response.status === 200 && response.data.status === 200) {
+        const userData = response.data.data;
+        const token = response.data.token;
+
+        // Save session
+        sessionStorage.setItem("role", "user");
+        sessionStorage.setItem("uid", userData.id);
+        sessionStorage.setItem("email", userData.email);
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("name", `${userData.first_name} ${userData.last_name}`);
+        sessionStorage.setItem("mobile", userData.mobile);
+
+        setAlert({ open: true, type: true, message: response.data.message });
+        router.push("/dashboard/new");
       }
-
-      sessionStorage.setItem("token", data.token);
-
-      setTimeout(() => {
-        setLoading(false);
-        router.replace("/dashboard/new");
-      }, 100);
     } catch (err) {
-      console.error("Login failed:", err);
-      setErrors({ general: err.message || "Something went wrong" });
+      console.error(err);
+
+      // If backend sends validation errors
+      if (err.response?.data?.errors) {
+        // Convert array of errors to object to show under fields if possible
+        const fieldErrors = {};
+        err.response.data.errors.forEach((message) => {
+          if (message.toLowerCase().includes("username")) fieldErrors.username = message;
+          else if (message.toLowerCase().includes("password")) fieldErrors.password = message;
+          else fieldErrors.general = message;
+        });
+        setErrors(fieldErrors);
+      } else if (err.response?.data?.message) {
+        setErrors({ general: err.response.data.message });
+      } else {
+        setErrors({ general: "Something went wrong" });
+      }
+    } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-blue-900 to-blue-600">
@@ -75,23 +95,23 @@ const Login = () => {
           Shopping Admin
         </h2>
         <form onSubmit={handleLogin} className="space-y-6">
-          {/* Email */}
+          {/* Username */}
           <div>
             <label className="block text-gray-700 font-semibold mb-1">
-              Email <span className="text-red-500">*</span>
+              Username <span className="text-red-500">*</span>
             </label>
             <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className={`w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 ${errors.email
+              type="text"
+              name="username"
+              placeholder="Username"
+              className={`w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 ${errors.username
                 ? "border-red-500 focus:ring-red-500"
                 : "border-gray-300 focus:ring-blue-500"
                 }`}
               disabled={loading}
             />
-            {errors.email && (
-              <p className="mt-1 text-xs text-red-600">{errors.email}</p>
+            {errors.username && (
+              <p className="mt-1 text-xs text-red-600">{errors.username}</p>
             )}
           </div>
 
@@ -121,6 +141,21 @@ const Login = () => {
             {errors.password && (
               <p className="mt-1 text-xs text-red-600">{errors.password}</p>
             )}
+          </div>
+
+          {/* Google reCAPTCHA */}
+          <div>
+            <Box sx={{ transform: "scale(.97)", transformOrigin: "0 0" }}>
+              <ReCAPTCHA
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                onChange={(value) => setCaptchaToken(value)}
+              />
+              {errors.captcha && (
+                <Typography variant="caption" color="error">
+                  {errors.captcha}
+                </Typography>
+              )}
+            </Box>
           </div>
 
           {/* General Error */}
@@ -153,6 +188,20 @@ const Login = () => {
           </p>
         </form>
       </div>
+
+      {/* ✅ Snackbar for alert */}
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={3000}
+        onClose={() => setAlert({ ...alert, open: false })}
+      >
+        <Alert
+          severity={alert.type ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

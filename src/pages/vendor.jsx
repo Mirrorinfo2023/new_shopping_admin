@@ -30,6 +30,7 @@ import {
   ChevronDown,
   ChevronUp
 } from "lucide-react";
+import axios from "axios";
 
 const AllVendors = () => {
   const [vendors, setVendors] = useState([]);
@@ -53,10 +54,11 @@ const AllVendors = () => {
   const fetchVendors = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${BASE_URL}vendors/getall`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setVendors(data.vendors || []);
+
+      const res = await axios.get(`${BASE_URL}vendors/getall`);
+      console.log("Response data:", res.data);
+      setVendors(res.data.vendors || []);
+
     } catch (err) {
       console.error("Failed to fetch vendors:", err);
     } finally {
@@ -73,7 +75,7 @@ const AllVendors = () => {
     );
 
     if (statusFilter !== "all") {
-      filtered = filtered.filter(vendor => 
+      filtered = filtered.filter(vendor =>
         statusFilter === "active" ? vendor.isActive : !vendor.isActive
       );
     }
@@ -141,11 +143,10 @@ const AllVendors = () => {
   };
 
   const getStatusBadge = (isActive) => (
-    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-      isActive 
-        ? 'bg-green-100 text-green-800' 
-        : 'bg-red-100 text-red-800'
-    }`}>
+    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${isActive
+      ? 'bg-green-100 text-green-800'
+      : 'bg-red-100 text-red-800'
+      }`}>
       {isActive ? (
         <>
           <CheckCircle className="w-4 h-4 mr-1" />
@@ -175,15 +176,15 @@ const AllVendors = () => {
   );
 
   const SortableHeader = ({ children, sortKey }) => (
-    <th 
+    <th
       className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50 transition-colors"
       onClick={() => handleSort(sortKey)}
     >
       <div className="flex items-center space-x-1">
         <span>{children}</span>
         {sortConfig.key === sortKey && (
-          sortConfig.direction === 'asc' ? 
-            <ChevronUp className="w-4 h-4" /> : 
+          sortConfig.direction === 'asc' ?
+            <ChevronUp className="w-4 h-4" /> :
             <ChevronDown className="w-4 h-4" />
         )}
       </div>
@@ -231,31 +232,31 @@ const AllVendors = () => {
 
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard 
-              icon={Users} 
-              label="Total Vendors" 
-              value={vendors.length} 
-              color="bg-blue-500" 
+            <StatCard
+              icon={Users}
+              label="Total Vendors"
+              value={vendors.length}
+              color="bg-blue-500"
             />
-            <StatCard 
-              icon={CheckCircle} 
-              label="Active Vendors" 
-              value={vendors.filter(v => v.isActive).length} 
-              color="bg-green-500" 
+            <StatCard
+              icon={CheckCircle}
+              label="Active Vendors"
+              value={vendors.filter(v => v.isActive).length}
+              color="bg-green-500"
             />
-            <StatCard 
-              icon={Activity} 
-              label="Verified Vendors" 
-              value={vendors.filter(v => v.isVerified).length} 
-              color="bg-purple-500" 
+            <StatCard
+              icon={Activity}
+              label="Verified Vendors"
+              value={vendors.filter(v => v.isVerified).length}
+              color="bg-purple-500"
             />
-            <StatCard 
-              icon={TrendingUp} 
-              label="This Month" 
-              value={vendors.filter(v => 
+            <StatCard
+              icon={TrendingUp}
+              label="This Month"
+              value={vendors.filter(v =>
                 new Date(v.createdAt).getMonth() === new Date().getMonth()
-              ).length} 
-              color="bg-orange-500" 
+              ).length}
+              color="bg-orange-500"
             />
           </div>
 
@@ -272,7 +273,7 @@ const AllVendors = () => {
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-              
+
               <div className="flex gap-3">
                 <select
                   value={statusFilter}
@@ -283,7 +284,7 @@ const AllVendors = () => {
                   <option value="active">Active Only</option>
                   <option value="inactive">Inactive Only</option>
                 </select>
-                
+
                 <button className="px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                   <Filter className="w-5 h-5" />
                 </button>
@@ -332,8 +333,8 @@ const AllVendors = () => {
                 ) : (
                   filteredVendors.map((vendor) => (
                     <React.Fragment key={vendor._id}>
-                      <tr className="hover:bg-gray-50 transition-colors cursor-pointer" 
-                          onClick={() => toggleExpandVendor(vendor._id)}>
+                      <tr className="hover:bg-gray-50 transition-colors cursor-pointer"
+                        onClick={() => toggleExpandVendor(vendor._id)}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
@@ -350,7 +351,7 @@ const AllVendors = () => {
                             </div>
                           </div>
                         </td>
-                        
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900 font-medium">
                             {vendor.businessName}
@@ -360,7 +361,7 @@ const AllVendors = () => {
                             {vendor.businessType}
                           </div>
                         </td>
-                        
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">{vendor.email}</div>
                           <div className="text-sm text-gray-500 flex items-center">
@@ -368,29 +369,29 @@ const AllVendors = () => {
                             {vendor.phone}
                           </div>
                         </td>
-                        
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">GST: {vendor.gstNumber}</div>
                           <div className="text-sm text-gray-500">PAN: {vendor.panNumber}</div>
                         </td>
-                        
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             {vendor.businessType}
                           </span>
                         </td>
-                        
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           {getStatusBadge(vendor.isActive)}
                         </td>
-                        
+
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <div className="flex items-center">
                             <Calendar className="w-3 h-3 mr-1" />
                             {new Date(vendor.createdAt).toLocaleDateString()}
                           </div>
                         </td>
-                        
+
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center space-x-2">
                             <button
@@ -426,7 +427,7 @@ const AllVendors = () => {
                           </div>
                         </td>
                       </tr>
-                      
+
                       {/* Expanded Details */}
                       {expandedVendor === vendor._id && (
                         <tr className="bg-blue-50">
@@ -443,7 +444,7 @@ const AllVendors = () => {
                                   <p><span className="font-medium">GST:</span> {vendor.gstNumber}</p>
                                 </div>
                               </div>
-                              
+
                               <div>
                                 <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
                                   <MapPin className="w-4 h-4 mr-2" />
@@ -455,7 +456,7 @@ const AllVendors = () => {
                                   <p>{vendor.address?.pincode}, {vendor.address?.country}</p>
                                 </div>
                               </div>
-                              
+
                               <div>
                                 <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
                                   <CreditCard className="w-4 h-4 mr-2" />
@@ -468,10 +469,10 @@ const AllVendors = () => {
                                 </div>
                               </div>
                             </div>
-                            
+
                             <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between items-center">
                               <div className="text-sm text-gray-500">
-                                Created: {new Date(vendor.createdAt).toLocaleString()} | 
+                                Created: {new Date(vendor.createdAt).toLocaleString()} |
                                 Updated: {new Date(vendor.updatedAt).toLocaleString()}
                               </div>
                               <div className="flex space-x-2">
